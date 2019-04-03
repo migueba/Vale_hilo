@@ -8,7 +8,7 @@
   $mysqli = new mysqli($host,$username,$password,$databasename);
   $mysqli->set_charset("utf8");
 
-  $consulta = "SELECT UPPER(A.descripcion) as descripcion FROM existencia A ORDER BY A.descripcion";
+  $consulta = "SELECT UPPER(A.descripcion) as descripcion FROM existencia A WHERE A.hilo = ". $_POST['idhilo'] ."LIMIT 1";
 
   if ($resultado = $mysqli->query($consulta)) {
     while ($obj = $resultado->fetch_object()) {
@@ -20,6 +20,6 @@
   }
 
   $mysqli->close();
-
+  //echo ($data);
   echo json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>
