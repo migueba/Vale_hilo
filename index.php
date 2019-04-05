@@ -4,25 +4,20 @@
 
 <head>
 <title>Vale de Hilo</title>
+<style>
+td input[type="checkbox"] {
+    float: left;
+    margin: 0 auto;
+    width: 100%;
+}
+</style>
 <meta charset="utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-<!--
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.js"
-      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-      crossorigin="anonymous">
-    </script>
-    <script
-      src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-      integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-      crossorigin="anonymous">
-    </script>
-    -->
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 
     <script >
       // Busca el Nombre del Hilo usando su Clave
@@ -49,12 +44,14 @@
                     success: function(data){
                       $("#contenido").html('');
                       /* Vemos que la respuesta no este vacía y sea una arreglo */
-                      $("#contenido").append("<thead><tr><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Bobinas</th><th scope=\"col\">Presentacion</th><th scope=\"col\">Tipo</th></th></tr></thead>");
+                      $("#contenido").append("<thead><tr><th></th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Bobinas</th><th scope=\"col\">Presentacion</th><th scope=\"col\">Tipo</th></th></tr></thead>");
                       if(data != null && $.isArray(data)){
                           /* Recorremos tu respuesta con each */
+                          var i = 0 ;
                           $.each(data, function(key, value){
                               /* Vamos agregando a nuestra tabla las filas necesarias */
-                              $("#contenido").append("<tr><td>" + value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+ value.pesoneto +"</td><td>"+value.bobinas +"</td><td>"+value.presentacion+"</td><td>"+value.tipo+"</td></tr>");
+                              $("#contenido").append("<tr><td><input type=\"checkbox\" value="+value.id+" name=\"id_ent["+i+"]\"> </td><td>" + value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+ value.pesoneto +"</td><td>"+value.bobinas +"</td><td>"+value.presentacion+"</td><td>"+value.tipo+"</td></tr>");
+                              i++;
                           });
                       }else{
                         alert("Ocurrio un Incoveniente con la BD");
@@ -105,12 +102,11 @@
     <div class="container">
         <h1 class="page-header">Vale de Hilo</h1>
         <form method="POST" action="procesa.php">
-
           <div class="row">
             <div class="col-xs-1">
               <div class="form-group">
                   <label>Turno</label>
-                  <select class="form-control" id="turno">
+                  <select class="form-control" id="turno" name="turno">
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
@@ -120,25 +116,25 @@
             <div class="col-xs-2">
               <div class="form-group">
                   <label>Fecha</label>
-                  <input type="date" id="fecha" class="form-control" />
+                  <input type="date" id="fecha" class="form-control" name="fecha" required/>
               </div>
             </div>
             <div class="col-xs-1">
               <div class="form-group">
                   <label>ID</label>
-                  <input type="text" id="idsupervisor" class="form-control" disabled/>
+                  <input type="text" id="idsupervisor" class="form-control" name="idsupervisor" required/>
               </div>
             </div>
             <div class="col-xs-6">
               <div class="form-group">
                   <label>Supervisor</label>
-                  <input type="text" id="supervisor" class="form-control" />
+                  <input type="text" id="supervisor" name="supervisor" class="form-control" />
               </div>
             </div>
             <div class="col-xs-2">
               <div class="form-group">
                   <label>Destino</label>
-                  <select class="form-control" id="destino">
+                  <select class="form-control" id="destino" name="destino" required>
                       <option value="1">Urdido</option>
                       <option value="2">Tejido</option>
                       <option value="3">Maquila</option>
@@ -150,11 +146,11 @@
           <div class="row">
             <div class="col-xs-1">
               <label>Clave</label>
-              <input type="text" id="clave_hilo" class="form-control" />
+              <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" />
             </div>
             <div class="col-xs-7">
               <label>Hilo</label>
-              <input type="text" id="hilos" class="form-control auto-widget" />
+              <input type="text" id="hilos" name="hilos" class="form-control auto-widget" />
             </div>
           </div>
 
