@@ -49,15 +49,15 @@
                     success: function(data){
                       $("#contenido").html('');
                       /* Vemos que la respuesta no este vacía y sea una arreglo */
-                      $("#contenido").append("<thead><tr><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Bobinas</th><th scope=\"col\">Presentacion</th></tr></thead>");
+                      $("#contenido").append("<thead><tr><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Bobinas</th><th scope=\"col\">Presentacion</th><th scope=\"col\">Tipo</th></th></tr></thead>");
                       if(data != null && $.isArray(data)){
                           /* Recorremos tu respuesta con each */
                           $.each(data, function(key, value){
                               /* Vamos agregando a nuestra tabla las filas necesarias */
-                              $("#contenido").append("<tr><td>" + value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+ value.pesoneto +"</td><td>"+value.bobinas +"</td><td>"+value.presentacion+"</td></tr>");
+                              $("#contenido").append("<tr><td>" + value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+ value.pesoneto +"</td><td>"+value.bobinas +"</td><td>"+value.presentacion+"</td><td>"+value.tipo+"</td></tr>");
                           });
                       }else{
-                        alert(":V Error");
+                        alert("Ocurrio un Incoveniente con la BD");
                       }
                     }
                    });
@@ -65,6 +65,7 @@
                  },
                  error: function(r) {
                    $('input[id=hilos]').val("") ;
+                   $("#contenido").html('');
                    alert("No Existe la Clave de Hilo");
                  },
                  dataType: "json"
