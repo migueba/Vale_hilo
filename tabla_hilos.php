@@ -12,7 +12,7 @@
     A.tarima, A.pesoneto, (A.bobinas+A.Cbobina+A.Pbobina) as bobinas ,
     IF(A.tarima<>0,\"TARIMA  \",IF(A.bolsa<>0,\"BOLSA  \",IF(A.caja<>0,\"CAJA  \",IF(A.palet<>0,\"PALET  \",\"N/D  \")))) as presentacion,
   	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo,
-    0 AS sel, A.id_ent
+    A.id_ent as id
   FROM entradash A
     WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 )
     ORDER BY A.clave, A.oriextra";
