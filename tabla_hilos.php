@@ -14,7 +14,7 @@
   	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo,
     0 AS sel, A.id_ent
   FROM entradash A
-    WHERE A.clave = ". $_GET['idhilo'] ." AND A.estatus = ( 1 )
+    WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 )
     ORDER BY A.clave, A.oriextra";
 
   if ($resultado = $mysqli->query($consulta)) {
