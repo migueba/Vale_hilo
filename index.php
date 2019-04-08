@@ -25,7 +25,7 @@ td input[type="checkbox"] {
 <body>
     <div class="container">
         <h2 class="page-header">Vale de Hilo</h2>
-        <form method="POST" action="procesa.php">
+        <form method="POST" action="guardar_vale.php">
           <div class="row">
             <div class="col-xs-1">
               <div class="form-group">
@@ -143,7 +143,9 @@ td input[type="checkbox"] {
                           var i = 0 ;
                           $.each(data, function(key, value){
                               /* Vamos agregando a nuestra tabla las filas necesarias */
-                              $("#contenido").append("<tr><td><input type=\"checkbox\" value="+value.id+" class=\"mycheck\" name=\"id_ent["+i+"]\"> </td><td>" + value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+ value.pesoneto +"</td><td>"+value.bobinas +"</td><td>"+value.presentacion+"</td><td>"+value.tipo+"</td></tr>");
+                              $("#contenido").append("<tr><td data-id=\"0\"><input type=\"checkbox\" value="+value.id+" class=\"mycheck\" name=\"id_ent["+i+"]\"> </td><td data-id=\"1\">" +
+                              value.clave + "</td><td data-id=\"2\">" + value.entrada + "</td><td data-id=\"3\">" + value.lote + "</td><td data-id=\"4\">" + value.tarima + "</td><td data-id=\"5\" class = \"peso_neto\">"+
+                              value.pesoneto +"</td><td data-id=\"6\" class=\"bobinas\">"+ value.bobinas +"</td><td data-id=\"7\">"+value.presentacion+"</td><td data-id=\"8\">"+value.tipo+"</td></tr>");
                               i++;
                           });
                           $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
@@ -168,6 +170,36 @@ td input[type="checkbox"] {
         $("#contenido").on('click', '.mycheck', function(data) {
             var $contador = 0;
             var $lista_check = $('.mycheck');
+
+
+            $('table#contenido > tbody  > tr').each(function() {
+              if ( ($(this).closest("tr").find("td > checkbox.mycheck")).is(':checked') ){
+                console.log($(this).closest("tr").find("td.bobinas").text());
+              }else {
+                console.log($(this).closest("tr").find("td.bobinas").attr('data-id'));
+              }
+
+              //console.log($(this).closest("tr").find("td.bobinas").text());
+            });
+
+
+
+            //////////////////////////////////////
+            //var $tablita = $('table#contenido > tbody  > tr');
+
+            //console.log( $tablita.attr("data-id") ) ;
+            //////////////////////////////////////
+
+
+
+            //$.each( $tablita, function( key, val ) {
+              //console.log(val.attr("data-id"));
+              //if ($(val.attr('.mycheck')).is(':checked')){
+                //console.log(val);
+                //console.log(val.attr('.mycheck'));
+              //}
+            //});
+
             $.each( $lista_check, function( key, val ) {
               if ($(val).is(':checked')){
                 $contador++;
@@ -184,6 +216,7 @@ td input[type="checkbox"] {
 
         //Funcion para poner el menu de detalle de el vale del hilo
         function menu_destino(){
+
             for (var i = 0; i < 6; i++) {
               $("#detalle").append("<div id=\"existe_detalle\" class=\"row no-pad\">"+
                 "<div class=\"col-xs-3\">"+
@@ -196,6 +229,7 @@ td input[type="checkbox"] {
                   "<div class=\"form-group\">"+
                     "<label>Destino</label>"+
                     "<select class=\"form-control\" id=\"destino_detalle\" name=\"detalle["+i+"][destino]\">"+
+                      "<option value=\"0\"></option>"+
                       "<option value=\"1\">Urdido</option>"+
                       "<option value=\"2\">Tejido</option>"+
                       "<option value=\"3\">Maquila</option>"+
@@ -220,6 +254,16 @@ td input[type="checkbox"] {
 
         //Funcion para los totales
         function mostrar_totales(){
+            var $lista_check = $('.mycheck');
+            var total_kilos = 0 ;
+            var total_bobinas = 0 ;
+
+            $.each( $lista_check, function( key, val ) {
+              if ($(val).is(':checked')){
+                total_kilos = total_kilos+val ;
+              }
+            });
+
         }
 
         // Escrip de Autocompletar
