@@ -12,10 +12,10 @@ td input[type="checkbox"] {
 }
 </style>
 <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap3-3-7.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap3-3-7-theme.min.css">
 
-    <link rel="stylesheet" type="text/css" href="padding.css">
+    <link rel="stylesheet" type="text/css" href="css/padding.css">
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -25,12 +25,12 @@ td input[type="checkbox"] {
 <body>
     <div class="container">
         <h2 class="page-header">Vale de Hilo</h2>
-        <form method="POST" action="guardar_vale.php">
+        <form method="POST" id="formulario" action="guardar_vale.php">
           <div class="row">
             <div class="col-xs-1">
               <div class="form-group">
                   <label>Turno</label>
-                  <select class="form-control" id="turno" name="turno">
+                  <select class="form-control" id="turno" name="turno" required>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
@@ -55,31 +55,19 @@ td input[type="checkbox"] {
                   <input type="text" id="supervisor" name="supervisor" class="form-control" />
               </div>
             </div>
-            <!---
-            <div class="col-xs-2">
-              <div class="form-group">
-                  <label>Destino</label>
-                  <select class="form-control" id="destino" name="destino" required>
-                      <option value="1">Urdido</option>
-                      <option value="2">Tejido</option>
-                      <option value="3">Maquila</option>
-                  </select>
-                  <small id="DestinoHelp" class="form-text text-muted">Destino del hilo.</small>
-              </div>
-            </div>-->
           </div>
 
           <div class="row">
             <div class="col-xs-1">
               <div class="form-group">
                 <label>Clave</label>
-                <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" />
+                <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" required/>
               </div>
             </div>
             <div class="col-xs-7">
               <div class="form-group">
                 <label>Hilo</label>
-                <input type="text" id="hilos" name="hilos" class="form-control auto-widget" />
+                <input type="text" id="hilos" name="hilos" class="form-control auto-widget" required/>
               </div>
             </div>
             <div class="col-xs-4">
@@ -88,7 +76,7 @@ td input[type="checkbox"] {
             </div>
           </div>
 
-          <div class="row " >
+          <div class="row no-pad" >
             <div class="col-xs-8">
               <div class="form-group" id="contenido_tabla" style="">
                 <table id="contenido" class="table table-bordered table-hover table-sm"></table>
@@ -103,7 +91,7 @@ td input[type="checkbox"] {
           </div>
 
           <div class="btn-group">
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="submit" class="btn btn-primary" disabled>Guardar</button>
           </div>
 
         </form>
@@ -120,7 +108,7 @@ td input[type="checkbox"] {
 
              var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2);
              $.ajax({
-                 url: "busca_hilo.php",
+                 url: "modelo/busca_hilo.php",
                  method: "POST",
                  data: { idhilo : idhilo_var },
                  dataType: "json",
@@ -130,7 +118,7 @@ td input[type="checkbox"] {
                    event.preventDefault();
 
                    $.ajax({
-                    url: "tabla_hilos.php",
+                    url: "modelo/tabla_hilos.php",
                     method: "POST",
                     data: {idhilo : idhilo_var},
                     dataType: "json",
@@ -143,9 +131,9 @@ td input[type="checkbox"] {
                           var i = 0 ;
                           $.each(data, function(key, value){
                               /* Vamos agregando a nuestra tabla las filas necesarias */
-                              $("#contenido").append("<tr><td data-id=\"0\"><input type=\"checkbox\" value="+value.id+" class=\"mycheck\" name=\"id_ent["+i+"]\"> </td><td data-id=\"1\">" +
-                              value.clave + "</td><td data-id=\"2\">" + value.entrada + "</td><td data-id=\"3\">" + value.lote + "</td><td data-id=\"4\">" + value.tarima + "</td><td data-id=\"5\" class = \"peso_neto\">"+
-                              value.pesoneto +"</td><td data-id=\"6\" class=\"bobinas\">"+ value.bobinas +"</td><td data-id=\"7\">"+value.presentacion+"</td><td data-id=\"8\">"+value.tipo+"</td></tr>");
+                              $("#contenido").append("<tr><td><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck\" name=\"id_ent["+i+"]\"> </td><td>" +
+                              value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+
+                              value.pesoneto +"</td><td>"+ value.bobinas +"</td><td>"+value.presentacion+"</td><td>"+value.tipo+"</td></tr>");
                               i++;
                           });
                           $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
@@ -168,67 +156,46 @@ td input[type="checkbox"] {
 
         //script cuando le da click a un chebock
         $("#contenido").on('click', '.mycheck', function(data) {
-            var $contador = 0;
+            var $contador = 0 ;
+            var $totalpeso = 0 ;
+            var $totalbobinas = 0 ;
             var $lista_check = $('.mycheck');
-
-
-            $('table#contenido > tbody  > tr').each(function() {
-              if ( ($(this).closest("tr").find("td > checkbox.mycheck")).is(':checked') ){
-                console.log($(this).closest("tr").find("td.bobinas").text());
-              }else {
-                console.log($(this).closest("tr").find("td.bobinas").attr('data-id'));
-              }
-
-              //console.log($(this).closest("tr").find("td.bobinas").text());
-            });
-
-
-
-            //////////////////////////////////////
-            //var $tablita = $('table#contenido > tbody  > tr');
-
-            //console.log( $tablita.attr("data-id") ) ;
-            //////////////////////////////////////
-
-
-
-            //$.each( $tablita, function( key, val ) {
-              //console.log(val.attr("data-id"));
-              //if ($(val.attr('.mycheck')).is(':checked')){
-                //console.log(val);
-                //console.log(val.attr('.mycheck'));
-              //}
-            //});
 
             $.each( $lista_check, function( key, val ) {
               if ($(val).is(':checked')){
+                $totalpeso = $totalpeso + parseFloat($(val).attr('data-peso')) ;
+                $totalbobinas = $totalbobinas + parseInt($(val).attr('data-bobina')) ;
                 $contador++;
-                return false;
+                //return false; Sirve para salir el each
               }
             });
+
             if ($contador === 0){
               $("#detalle").html('');
+              $("#totales").html('');
             }else if( !$("#existe_detalle").length ) {
-              menu_destino();
+              menu_destino($totalpeso.toFixed(2),$totalbobinas);
+            }else {
+               $('input[id=pesototal]').val($totalpeso.toFixed(2)) ;
+               $('input[id=bobinatotal]').val($totalbobinas) ;
             }
-
         });
 
         //Funcion para poner el menu de detalle de el vale del hilo
-        function menu_destino(){
+        function menu_destino($tkgs, $tbobina){
 
             for (var i = 0; i < 6; i++) {
               $("#detalle").append("<div id=\"existe_detalle\" class=\"row no-pad\">"+
                 "<div class=\"col-xs-3\">"+
                   "<div class=\"form-group\">" +
                     "<label>Kgs</label>"+
-                    "<input type=\"text\" name=\"detalle["+i+"][kgs]\" class=\"form-control\" />"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][kgs]\" class=\"form-control\" />"+
                   "</div>"+
                 "</div>"+
                 "<div class=\"col-xs-3\">" +
                   "<div class=\"form-group\">"+
                     "<label>Destino</label>"+
-                    "<select class=\"form-control\" id=\"destino_detalle\" name=\"detalle["+i+"][destino]\">"+
+                    "<select class=\"form-control\" data-id=\""+i+"\" id=\"destino_detalle\" name=\"detalle["+i+"][destino]\">"+
                       "<option value=\"0\"></option>"+
                       "<option value=\"1\">Urdido</option>"+
                       "<option value=\"2\">Tejido</option>"+
@@ -239,50 +206,64 @@ td input[type="checkbox"] {
                 "<div class=\"col-xs-4\">"+
                   "<div class=\"form-group\">" +
                     "<label>Tela</label>"+
-                    "<input type=\"text\" name=\"detalle["+i+"][tela]\" class=\"form-control\" />"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][tela]\" class=\"form-control\" />"+
                   "</div>"+
                 "</div>"+
                 "<div class=\"col-xs-2\">"+
                   "<div class=\"form-group\">" +
                     "<label>Bobina</label>"+
-                    "<input type=\"text\" name=\"detalle["+i+"][bobinas]\" class=\"form-control\" disabled/>"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][bobinas]\" class=\"form-control\" disabled/>"+
                   "</div>"+
                 "</div>"+
               "</div>");
           }
+
+          // Pone los Totales
+          $("#totales").append("<div class=\"row\">"+
+              "<div class=\"col-xs-6\">"+
+                "<div class=\"form-group\">" +
+                  "<label>Total Kgs</label>"+
+                  "<input type=\"text\" id=\"pesototal\" name=\"pesototal\" value=\""+$tkgs+"\" class=\"form-control\" disabled/>"+
+                "</div>"+
+              "</div>"+
+              "<div class=\"col-xs-6\">"+
+                "<div class=\"form-group\">" +
+                  "<label>Total Bobinas</label>"+
+                  "<input type=\"text\" id=\"bobinatotal\" name=\"bobinatotal\" value=\""+$tbobina+"\" class=\"form-control\" disabled/>"+
+                "</div>"+
+              "</div>"+
+            "</div>");
         }
 
-        //Funcion para los totales
-        function mostrar_totales(){
-            var $lista_check = $('.mycheck');
-            var total_kilos = 0 ;
-            var total_bobinas = 0 ;
+        //Funcion para validar que el el detallado de KGS se cambio
+        $("#detalle").on('change', ':text[name^="detalle["][name$="][kgs]"]', function(data) {
+          var $kgs_sel  = parseFloat($('input[id=pesototal]').val()) ;
+          var $bobi_sel = parseInt($('input[id=bobinatotal]').val()) ;
+          var $puso_peso = parseFloat($(this).val()) ;
 
-            $.each( $lista_check, function( key, val ) {
-              if ($(val).is(':checked')){
-                total_kilos = total_kilos+val ;
-              }
-            });
+          $(':text[ name^="detalle['+$(this).attr('data-id')+'][bobinas]" ]').val(($puso_peso*$bobi_sel)/$kgs_sel) ;
+          //console.log($(this).attr('data-id')) ;
+        });
 
-        }
+        //function valida_detalle($tkgs, $tbobina){
+        //}
 
         // Escrip de Autocompletar
-        $( function() {
-          var lista_hilos = [];
-          // retrieve JSon from external url and load the data inside an array :
-          $.getJSON( "autocompletar.php", function( data ) {
-            $.each( data, function( key, val ) {
-              lista_hilos.push(val.label);
-            });
+        // retrieve JSon from external url and load the data inside an array :
+        var lista_hilos = [];
+        $.getJSON( "modelo/autocompletar.php", function( data ) {
+          $.each( data, function( key, val ) {
+            lista_hilos.push(val.label);
           });
-          $( "#hilos" ).autocomplete({
-            source: lista_hilos,
-            select: function( event, ui ) {
-              event.preventDefault();
-              alert(ui.item.label);
-            }
-          });
-        } );
+        });
+
+        $( "#hilos" ).autocomplete({
+          source: lista_hilos,
+          select: function( event, ui ) {
+            event.preventDefault();
+            alert(ui.item.label);
+          }
+        });
 
       } );
     </script>
