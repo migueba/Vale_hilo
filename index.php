@@ -25,7 +25,7 @@
 <body>
     <div class="container">
         <h2 class="page-header">Vale de Hilo</h2>
-        <form method="POST" id="formulario" action="modelo/guardar_vale.php">
+        <form method="POST" id="formulario" action="modelo/procesa.php">
           <div class="row">
             <div class="col-xs-1">
               <div class="form-group">
@@ -106,7 +106,7 @@
           </div>
 
           <div class="btn-group">
-              <button type="submit" class="btn btn-primary" disabled>Guardar</button>
+              <button type="submit" id="guardavale" class="btn btn-primary" disabled>Guardar</button>
           </div>
 
         </form>
@@ -186,9 +186,11 @@
             });
 
             if ($contador === 0){
+              document.getElementById("guardavale").disabled = true;
               $("#detalle").html('');
               $("#totales").html('');
             }else if( !$("#existe_detalle").length ) {
+              document.getElementById("guardavale").disabled = false;
               menu_destino($totalpeso.toFixed(2),$totalbobinas);
             }else {
                $('input[id=pesototal]').val($totalpeso.toFixed(2)) ;
@@ -227,7 +229,7 @@
                 "<div class=\"col-xs-2\">"+
                   "<div class=\"form-group\">" +
                     "<label>Bobina</label>"+
-                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][bobinas]\" class=\"form-control\" disabled/>"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][bobinas]\" class=\"form-control\" readonly/>"+
                   "</div>"+
                 "</div>"+
               "</div>");
@@ -238,13 +240,13 @@
               "<div class=\"col-xs-6\">"+
                 "<div class=\"form-group\">" +
                   "<label>Total Kgs</label>"+
-                  "<input type=\"text\" id=\"pesototal\" name=\"pesototal\" value=\""+$tkgs+"\" class=\"form-control\" disabled/>"+
+                  "<input type=\"text\" id=\"pesototal\" name=\"pesototal\" value=\""+$tkgs+"\" class=\"form-control\"/ readonly>"+
                 "</div>"+
               "</div>"+
               "<div class=\"col-xs-6\">"+
                 "<div class=\"form-group\">" +
                   "<label>Total Bobinas</label>"+
-                  "<input type=\"text\" id=\"bobinatotal\" name=\"bobinatotal\" value=\""+$tbobina+"\" class=\"form-control\" disabled/>"+
+                  "<input type=\"text\" id=\"bobinatotal\" name=\"bobinatotal\" value=\""+$tbobina+"\" class=\"form-control\"/ readonly>"+
                 "</div>"+
               "</div>"+
             "</div>");
@@ -279,6 +281,32 @@
             alert(ui.item.label);
           }
         });
+
+        /*
+        /////// Cuando preciona el Boton de Guardar al Formulario
+        var form = $("#formulario");
+        form.submit(function(){
+            form.find('.label-danger').text('');
+
+            $.ajax({
+                url: "modelo/guardar_vale.php",
+                method: "POST",
+                data: form.serialize(),
+                dataType: "json",
+                success: function(r){
+                    if(!r.response) {
+                        for(var k in r.errors){
+                            $("span[data-key='" + k + "']").text(r.errors[k]);
+                        }
+                    }
+                },
+                error: function(r) {
+                  alert("Error");
+                }
+            });
+            return false;
+        });
+      */
 
       } );
     </script>
