@@ -201,18 +201,18 @@
         //Funcion para poner el menu de detalle de el vale del hilo
         function menu_destino($tkgs, $tbobina){
 
-            for (var i = 0; i < 6; i++) {
-              $("#detalle").append("<div id=\"existe_detalle\" class=\"row no-pad\">"+
+            for (var i = 0; i < 1; i++) {
+              $("#detalle").append("<div id=\"existe_detalle"+i+"\" class=\"row no-pad\">"+
                 "<div class=\"col-xs-3\">"+
                   "<div class=\"form-group\">" +
                     "<label>Kgs</label>"+
-                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][kgs]\" class=\"form-control\" />"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][kgs]\" value=\""+$tkgs+"\" class=\"form-control\" required />"+
                   "</div>"+
                 "</div>"+
                 "<div class=\"col-xs-3\">" +
                   "<div class=\"form-group\">"+
                     "<label>Destino</label>"+
-                    "<select class=\"form-control\" data-id=\""+i+"\" id=\"destino_detalle\" name=\"detalle["+i+"][destino]\">"+
+                    "<select class=\"form-control\" data-id=\""+i+"\" id=\"destino_detalle\" name=\"detalle["+i+"][destino]\" required>"+
                       "<option value=\"0\"></option>"+
                       "<option value=\"1\">Urdido</option>"+
                       "<option value=\"2\">Tejido</option>"+
@@ -223,13 +223,13 @@
                 "<div class=\"col-xs-4\">"+
                   "<div class=\"form-group\">" +
                     "<label>Tela</label>"+
-                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][tela]\" class=\"form-control\" />"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][tela]\" class=\"form-control\" required />"+
                   "</div>"+
                 "</div>"+
                 "<div class=\"col-xs-2\">"+
                   "<div class=\"form-group\">" +
                     "<label>Bobina</label>"+
-                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][bobinas]\" class=\"form-control\" readonly/>"+
+                    "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][bobinas]\" value=\""+$tbobina+"\" class=\"form-control\" readonly/>"+
                   "</div>"+
                 "</div>"+
               "</div>");
@@ -259,11 +259,60 @@
           var $puso_peso = parseFloat($(this).val()) ;
 
           $(':text[ name^="detalle['+$(this).attr('data-id')+'][bobinas]" ]').val(($puso_peso*$bobi_sel)/$kgs_sel) ;
-          //console.log($(this).attr('data-id')) ;
+
+          var $totalagregado = 0 ;
+          var $haykgs_vacio = 0 ;
+          var $lista_kgs = $(':text[name^="detalle["][name$="][kgs]"]') ;
+          $.each( $lista_kgs, function( key, val ) {
+              $valor_contiene = parseFloat($('input[name="detalle\['+key+'\]\[kgs\]"]').val())
+              $totalagregado = $totalagregado  + $valor_contiene  ;
+              if ( $valor_contiene  = 0){
+                $haykgs_vacio = key ;
+              }
+          });
+
+          console.log("Valor de totalagregado antes del IF ");
+          console.log( $totalagregado );
+
+          if( ($totalagregado < $kgs_sel) && ($haykgs_vacio === 0) ){
+            $("#detalle").append("<div id=\"existe_detalle"+(parseInt($(this).attr('data-id'))+1)+"\" class=\"row no-pad\" >"+
+              "<div class=\"col-xs-3\">"+
+                "<div class=\"form-group\">" +
+                  "<label>Kgs</label>"+
+                  "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][kgs]\" value=\"0\" class=\"detalle-kgs form-control\" required/>"+
+                "</div>"+
+              "</div>"+
+              "<div class=\"col-xs-3\">" +
+                "<div class=\"form-group\">"+
+                  "<label>Destino</label>"+
+                  "<select class=\"form-control\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" id=\"destino_detalle\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][destino]\" required>"+
+                    "<option value=\"0\"></option>"+
+                    "<option value=\"1\">Urdido</option>"+
+                    "<option value=\"2\">Tejido</option>"+
+                    "<option value=\"3\">Maquila</option>"+
+                  "</select>"+
+                "</div>"+
+              "</div>"+
+              "<div class=\"col-xs-4\">"+
+                "<div class=\"form-group\">" +
+                  "<label>Tela</label>"+
+                  "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][tela]\" class=\"form-control\" required/>"+
+                "</div>"+
+              "</div>"+
+              "<div class=\"col-xs-2\">"+
+                "<div class=\"form-group\">" +
+                  "<label>Bobina</label>"+
+                  "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][bobinas]\"  class=\"form-control\" readonly/>"+
+                "</div>"+
+              "</div>"+
+            "</div>");
+          }else if($totalagregado === $kgs_sel){
+            console.log( $haykgs_vacio );
+            //$("#existe_detalle"+$haykgs_vacio.toString()).remove();
+          }
+
         });
 
-        //function valida_detalle($tkgs, $tbobina){
-        //}
 
         // Escrip de Autocompletar
         // retrieve JSon from external url and load the data inside an array :
