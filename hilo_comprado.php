@@ -90,14 +90,14 @@
           </div>
 
           <div class="row no-pad" >
-            <div class="col-xs-7">
+            <div class="col-xs-8">
               <div class="form-group" id="contenido_tabla" style="">
                 <table id="contenido" class="table table-bordered table-hover table-sm"></table>
                 <span data-key="id_ent" class="label label-danger"></span>
               </div>
             </div>
 
-            <div class="col-xs-5">
+            <div class="col-xs-4">
               <!--<div id="detalle" class="form-group" style="max-height: 350px;overflow-y: scroll;"> -->
               <div id="detalle" class="form-group" style="max-height: 350px;overflow-y: scroll;">
               </div>
@@ -125,7 +125,7 @@
              $.ajax({
                  url: "modelo/busca_hilo.php",
                  method: "POST",
-                 data: { idhilo : idhilo_var, comprado : '1' },
+                 data: { idhilo : idhilo_var,comprado : '0' },
                  dataType: "json",
                  success: function(r){
                    $('input[id=hilos]').val(r) ;
@@ -135,11 +135,11 @@
                    $.ajax({
                     url: "modelo/tabla_hilos.php",
                     method: "POST",
-                    data: {idhilo : idhilo_var },
+                    data: {idhilo : idhilo_var},
                     dataType: "json",
                     success: function(data){
                       $("#contenido").html('');
-                      $("#contenido").append("<thead class=\"thead-dark\"><tr><th>Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th><th scope=\"col\">Tipo</th></th></tr></thead>");
+                      $("#contenido").append("<thead class=\"thead-dark\"><tr><th>Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th><th scope=\"col\">Muestra</th><th scope=\"col\">Tipo</th></th></tr></thead>");
                       /* Vemos que la respuesta no este vacía y sea una arreglo */
                       if(data != null && $.isArray(data)){
                           /* Recorremos tu respuesta con each */
@@ -147,8 +147,8 @@
                           $.each(data, function(key, value){
                               /* Vamos agregando a nuestra tabla las filas necesarias */
                               $("#contenido").append("<tr><td><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck\" name=\"id_ent["+i+"]\"> </td><td>" +
-                              value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td class=\"info\">" + value.tarima + "</td><td class=\"info\">"+value.presentacion+"</td><td>"+
-                              value.pesoneto +"</td><td>"+ value.bobinas +"</td><td>"+value.tipo+"</td></tr>");
+                              value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+
+                              value.pesoneto +"</td><td>"+ value.bobinas +"</td><td>"+value.presentacion+"</td><td>"+value.tipo+"</td></tr>");
                               i++;
                           });
                           $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
@@ -163,7 +163,7 @@
                    $('input[id=hilos]').val("") ;
                    $("#contenido").html('');
                    $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
-                   alert("No Existe la Clave de Hilo/ Solo debe ingresar Claves de Hilo Producido");
+                   alert("No Existe la Clave de Hilo/Solo se admiten claves de Hilos que no son producidos");
                  },
              });
           }

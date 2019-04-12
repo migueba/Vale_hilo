@@ -8,8 +8,14 @@
   $mysqli = new mysqli($host,$username,$password,$databasename);
   $mysqli->set_charset("utf8");
 
-  $consulta = "SELECT UPPER(A.descripcion) as descripcion
-    FROM existencia A WHERE A.hilo = ". $_POST['idhilo'] ."LIMIT 1";
+  //if($_POST['comprado'] === '1' ){
+    $consulta = "SELECT UPPER(A.descripcion) as descripcion
+      FROM existencia A WHERE A.hilo = ". $_POST['idhilo'] ."  LIMIT 1";
+  //}else{
+  //  $consulta = "SELECT UPPER(A.descripcion) as descripcion
+  //    FROM existencia A WHERE A.hilo = ". $_POST['idhilo'] ." AND A.prod_neta <> 0.96 LIMIT 1";
+  //}
+
 
   if ($resultado = $mysqli->query($consulta)) {
     while ($obj = $resultado->fetch_object()) {

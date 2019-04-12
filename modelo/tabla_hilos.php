@@ -9,10 +9,10 @@
   $mysqli->set_charset("utf8");
 
   $consulta = "SELECT A.clave, IF(A.oriextra=0,\"NORMAL   \",\"DEVOLUCION\") AS entrada, A.lote,
-    A.tarima, A.pesoneto, (A.bobinas+A.Cbobina+A.Pbobina) as bobinas ,
-    IF(A.tarima<>0,\"TARIMA  \",IF(A.bolsa<>0,\"BOLSA  \",IF(A.caja<>0,\"CAJA  \",IF(A.palet<>0,\"PALET  \",\"N/D  \")))) as presentacion,
-  	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo,
-    A.id_ent as id
+    IF(A.tarima<>0,A.tarima,IF(A.bolsa<>0,A.bolsa,IF(A.caja<>0,A.caja,IF(A.palet<>0,A.palet,0)))) as tarima, 
+    A.pesoneto, (A.bobinas+A.Cbobina+A.Pbobina) as bobinas ,
+    IF(A.tarima<>0,\"TARIMA  \",IF(A.bolsa<>0,\"BOLSA  \",IF(A.caja<>0,\"CAJA  \",IF(A.palet<>0,\"PALET  \",\"N/D.  \")))) as presentacion,
+  	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo, A.id_ent as id
   FROM entradash A
     WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 )
     ORDER BY A.clave, A.oriextra";
