@@ -3,22 +3,20 @@
 <html lang="es">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <title>Vale de Hilo</title>
-  <style>
-  td input[type="checkbox"] {
-      float: left;
-      margin: 0 auto;
-      width: 100%;
-  }
   </style>
   <meta charset="utf-8" />
-  <link rel="stylesheet" type="text/css" href="css/bootstrap3-3-7.min.css">
-  <link rel="stylesheet" type="text/css" href="css/bootstrap3-3-7-theme.min.css">
-  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-  <link rel="stylesheet" type="text/css" href="css/padding.css">
+  <script src="js/jquery.js"></script>
 
-  <script src="js/jquery-ui1-12-1.js"></script>
-  <script src="js/jquery-1-12-4.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <script src="js/bootstrap.js"></script>
+
+  <script src="js/jquery-ui.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+
+
 </head>
 
 <body>
@@ -26,7 +24,7 @@
         <h2 class="page-header">Vale de Hilo</h2>
         <form method="POST" id="formulario" action="modelo/procesa.php">
           <div class="row">
-            <div class="col-xs-1">
+            <div class="col-lg-1">
               <div class="form-group">
                   <label>Turno</label>
                   <select class="form-control" id="turno" name="turno" required>
@@ -37,21 +35,21 @@
                   <span data-key="turno" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-xs-3">
+            <div class="col-lg-3">
               <div class="form-group">
                   <label>Fecha</label>
                   <input type="date" id="fecha" class="form-control" name="fecha" required/>
                   <span data-key="fecha" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-xs-1">
+            <div class="col-lg-1">
               <div class="form-group">
                   <label>ID</label>
                   <input type="text" id="idsupervisor" class="form-control" name="idsupervisor" required/>
                   <span data-key="idsupervisor" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-xs-7">
+            <div class="col-lg-7">
               <div class="form-group">
                   <label>Supervisor</label>
                   <input type="text" id="supervisor" name="supervisor" class="form-control" />
@@ -61,42 +59,42 @@
           </div>
 
           <div class="row">
-            <div class="col-xs-1">
-              <div class="form-group">
+            <div class="col-lg-1">
+              <div class="form-group ui-widget">
                 <label>Clave</label>
                 <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" required/>
                 <span data-key="clave_hilo" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-xs-5">
+            <div class="col-lg-5">
               <div class="form-group">
                 <label>Hilo</label>
                 <input type="text" id="hilos" name="hilos" class="form-control auto-widget" required/>
                 <span data-key="hilos" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-xs-2">
+            <div class="col-lg-2">
               <div class="form-group">
-                <label>Titulo</label>
-                <input type="text" id="titulo" name="titulo" class="form-control auto-widget" required/>
-                <span data-key="titulo" class="label label-danger"></span>
+                <label>Tipo</label>
+                <input type="text" id="tipo" name="tipo" class="form-control auto-widget" required readonly/>
+                <span data-key="tipo" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-xs-4">
+            <div class="col-lg-4">
               <div class="form-group" id="totales">
               </div>
             </div>
           </div>
 
-          <div class="row no-pad" >
-            <div class="col-xs-7">
+          <div class="row no-gutters" >
+            <div class="col-lg-7">
               <div class="form-group" id="contenido_tabla" style="">
-                <table id="contenido" class="table table-bordered table-hover table-sm"></table>
+                <table id="contenido" class="table table-sm"></table>
                 <span data-key="id_ent" class="label label-danger"></span>
               </div>
             </div>
 
-            <div class="col-xs-5">
+            <div class="col-lg-5">
               <!--<div id="detalle" class="form-group" style="max-height: 350px;overflow-y: scroll;"> -->
               <div id="detalle" class="form-group" style="max-height: 350px;overflow-y: scroll;">
               </div>
@@ -115,58 +113,59 @@
     <script >
       // Busca el Nombre del Hilo usando su Clave
       $( function() {
+        $(".form-group").on('change', '#clave_hilo', function(data) {
+          event.preventDefault();
+          var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
+          $.ajax({
+              url: "modelo/busca_hilo.php",
+              method: "POST",
+              data: { idhilo : idhilo_var },
+              dataType: "json",
+              success: function(data){
 
-        $( "#clave_hilo" ).keypress(function( event ) {
-          if ( event.which == 13 ) {
-             event.preventDefault();
+                $('input[id=hilos]').val(data.descripcion) ;
+                $('input[id=tipo]').val(data.prod) ;
+                event.preventDefault();
 
-             var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2);
-             $.ajax({
-                 url: "modelo/busca_hilo.php",
+                $.ajax({
+                 url: "modelo/tabla_hilos.php",
                  method: "POST",
-                 data: { idhilo : idhilo_var, comprado : '1' },
+                 data: {idhilo : idhilo_var },
                  dataType: "json",
-                 success: function(r){
-                   $('input[id=hilos]').val(r) ;
-                  // Muestra la Tabla de los Hilos Disponibles
-                   event.preventDefault();
-
-                   $.ajax({
-                    url: "modelo/tabla_hilos.php",
-                    method: "POST",
-                    data: {idhilo : idhilo_var },
-                    dataType: "json",
-                    success: function(data){
-                      $("#contenido").html('');
-                      $("#contenido").append("<thead class=\"thead-dark\"><tr><th>Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th><th scope=\"col\">Tipo</th></th></tr></thead>");
-                      /* Vemos que la respuesta no este vacía y sea una arreglo */
-                      if(data != null && $.isArray(data)){
-                          /* Recorremos tu respuesta con each */
-                          var i = 0 ;
-                          $.each(data, function(key, value){
-                              /* Vamos agregando a nuestra tabla las filas necesarias */
-                              $("#contenido").append("<tr><td><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck\" name=\"id_ent["+i+"]\"> </td><td>" +
-                              value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td class=\"info\">" + value.tarima + "</td><td class=\"info\">"+value.presentacion+"</td><td>"+
-                              value.pesoneto +"</td><td>"+ value.bobinas +"</td><td>"+value.tipo+"</td></tr>");
-                              i++;
-                          });
-                          $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
-                      }else{
-                        alert("Ocurrio un Incoveniente con la BD");
-                      }
-                    }
-                   });
-                  //////////////////////////
-                 },
-                 error: function(r) {
-                   $('input[id=hilos]').val("") ;
+                 success: function(data){
                    $("#contenido").html('');
-                   $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
-                   alert("No Existe la Clave de Hilo/ Solo debe ingresar Claves de Hilo Producido");
-                 },
-             });
-          }
+                   $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th><th scope=\"col\">Tipo</th></tr></thead> <tbody>");
+                   /* Vemos que la respuesta no este vacía y sea una arreglo */
+                   if(data != null && $.isArray(data)){
+                       /* Recorremos tu respuesta con each */
+                       var i = 0 ;
+                       $.each(data, function(key, value){
+                           /* Vamos agregando a nuestra tabla las filas necesarias */
+                           $("#contenido").append("<tr><th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
+                           value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td class=\"table-info\">" + value.tarima + "</td><td class=\"table-info\">"+value.presentacion+"</td><td>"+
+                           value.pesoneto +"</td><td>"+ value.bobinas +"</td><td>"+value.tipo+"</td></tr>");
+                           i++;
+                       });
+                       $("#contenido").append("</tbody>") ;
+                       $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
+                   }else{
+                     alert("Ocurrio un Incoveniente con la BD");
+                   }
+                 }
+                });
+               //////////////////////////
+              },
+              error: function(r) {
+                $('input[id=hilos]').val("") ;
+                $("#contenido").html('');
+                $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
+                alert("No Existe la Clave de Hilo/ Solo debe ingresar Claves de Hilo Producido");
+              },
+          });
         });
+
+
+
 
         //script cuando le da click a un chebock
         $("#contenido").on('click', '.mycheck', function(data) {
@@ -185,12 +184,12 @@
             });
 
             if ($contador === 0){
-              document.getElementById("guardavale").disabled = true;
-              $("#detalle").html('');
-              $("#totales").html('');
-            }else if( !$("#existe_detalle").length ) {
-              document.getElementById("guardavale").disabled = false;
-              menu_destino($totalpeso.toFixed(2),$totalbobinas);
+              document.getElementById("guardavale").disabled = true ;
+              $("#detalle").html('') ;
+              $("#totales").html('') ;
+            }else if( !$("#existe_detalle0").length ) {
+              document.getElementById("guardavale").disabled = false ;
+              menu_destino($totalpeso.toFixed(2),$totalbobinas) ;
             }else {
                $('input[id=pesototal]').val($totalpeso.toFixed(2)) ;
                $('input[id=bobinatotal]').val($totalbobinas) ;
@@ -201,14 +200,14 @@
         function menu_destino($tkgs, $tbobina){
 
             for (var i = 0; i < 1; i++) {
-              $("#detalle").append("<div id=\"existe_detalle"+i+"\" class=\"row no-pad\">"+
-              "<div class=\"col-xs-2\">"+
+              $("#detalle").append("<div id=\"existe_detalle"+i+"\" class=\"row no-gutters\">"+
+              "<div class=\"col-lg-2\">"+
                 "<div class=\"form-group\">" +
                   "<label>Bobina</label>"+
                   "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][bobinas]\" value=\""+$tbobina+"\" class=\"form-control\" required/>"+
                 "</div>"+
               "</div>"+
-                "<div class=\"col-xs-3\">" +
+                "<div class=\"col-lg-3\">" +
                   "<div class=\"form-group\">"+
                     "<label>Destino</label>"+
                     "<select class=\"form-control\" data-id=\""+i+"\" id=\"destino_detalle\" name=\"detalle["+i+"][destino]\" required>"+
@@ -220,13 +219,13 @@
                     "</select>"+
                   "</div>"+
                 "</div>"+
-                "<div class=\"col-xs-4\">"+
+                "<div class=\"col-lg-4\">"+
                   "<div class=\"form-group\">" +
                     "<label>Tela</label>"+
                     "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][tela]\" class=\"form-control\" required />"+
                   "</div>"+
                 "</div>"+
-                "<div class=\"col-xs-3\">"+
+                "<div class=\"col-lg-3\">"+
                   "<div class=\"form-group\">" +
                     "<label>Kgs</label>"+
                     "<input type=\"text\" data-id=\""+i+"\" name=\"detalle["+i+"][kgs]\" value=\""+$tkgs+"\" class=\"form-control\" readonly/>"+
@@ -237,13 +236,13 @@
 
           // Pone los Totales
           $("#totales").append("<div class=\"row\">"+
-              "<div class=\"col-xs-6\">"+
+              "<div class=\"col-lg-6\">"+
                 "<div class=\"form-group\">" +
                   "<label>Total Bobinas</label>"+
                     "<input type=\"text\" id=\"bobinatotal\" name=\"bobinatotal\" value=\""+$tbobina+"\" class=\"form-control\"/ readonly>"+
                 "</div>"+
               "</div>"+
-              "<div class=\"col-xs-6\">"+
+              "<div class=\"col-lg-6\">"+
                 "<div class=\"form-group\">" +
                   "<label>Total Kgs</label>"+
                   "<input type=\"text\" id=\"pesototal\" name=\"pesototal\" value=\""+$tkgs+"\" class=\"form-control\"/ readonly>"+
@@ -291,14 +290,14 @@
           });
 
           if( ($totalagregado < $bobi_sel) && ($haybobinas_vacias === 0) ){
-            $("#detalle").append("<div id=\"existe_detalle"+(parseInt($(this).attr('data-id'))+1)+"\" class=\"row no-pad\" >"+
-              "<div class=\"col-xs-2\">"+
+            $("#detalle").append("<div id=\"existe_detalle"+(parseInt($(this).attr('data-id'))+1)+"\" class=\"row no-gutters\" >"+
+              "<div class=\"col-lg-2\">"+
                 "<div class=\"form-group\">" +
                   "<label>Bobina</label>"+
                   "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][bobinas]\"  class=\"form-control\" required/>"+
                 "</div>"+
               "</div>"+
-              "<div class=\"col-xs-3\">" +
+              "<div class=\"col-lg-3\">" +
                 "<div class=\"form-group\">"+
                   "<label>Destino</label>"+
                   "<select class=\"form-control\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" id=\"destino_detalle\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][destino]\" required>"+
@@ -310,13 +309,13 @@
                   "</select>"+
                 "</div>"+
               "</div>"+
-              "<div class=\"col-xs-4\">"+
+              "<div class=\"col-lg-4\">"+
                 "<div class=\"form-group\">" +
                   "<label>Tela</label>"+
                   "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][tela]\" class=\"form-control\" required/>"+
                 "</div>"+
               "</div>"+
-              "<div class=\"col-xs-3\">"+
+              "<div class=\"col-lg-3\">"+
                 "<div class=\"form-group\">" +
                   "<label>Kgs</label>"+
                   "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][kgs]\" value=\"0\" class=\"detalle-kgs form-control\" readonly required/>"+
@@ -332,20 +331,47 @@
 
         // Escrip de Autocompletar
         // retrieve JSon from external url and load the data inside an array :
-        var lista_hilos = [];
+        /* var lista_hilos = [];
         $.getJSON( "modelo/autocompletar.php", function( data ) {
           $.each( data, function( key, val ) {
             lista_hilos.push(val.label);
           });
         });
 
-        $( "#hilos" ).autocomplete({
+        $("#hilos").autocomplete({
           source: lista_hilos,
           select: function( event, ui ) {
             event.preventDefault();
             alert(ui.item.label);
           }
         });
+        */
+
+
+        $( "#hilos" ).autocomplete({
+          source: function( request, response ) {
+            console.log(request.term);
+            $.ajax( {
+              url: "modelo/autocompletar.php",
+              dataType: "json",
+              data: {
+                term: request.term
+              },
+              success: function( data ) {
+                response( data );
+              }
+            } );
+          },
+          minLength: 4,
+          autoFocus: true,
+          select: function( event, ui ) {
+            $("#clave_hilo").val(ui.item.value);
+            $("#clave_hilo").trigger("change");
+            //console.log( "Selected: " + ui.item.value + " aka " + ui.item.label );
+          }
+        } );
+
+
 
         /*
         /////// Cuando preciona el Boton de Guardar al Formulario

@@ -9,7 +9,7 @@
   $mysqli->set_charset("utf8");
 
   $consulta = "SELECT UPPER(A.descripcion) as descripcion, A.hilo
-    FROM existencia A ORDER BY A.descripcion";
+    FROM existencia A WHERE UPPER(A.descripcion) LIKE '%" . strtoupper($_GET['term']) . "%' ORDER BY A.descripcion";
 
   if ($resultado = $mysqli->query($consulta)) {
     $HilosData = array();
@@ -17,6 +17,7 @@
       while($row = $resultado->fetch_assoc()){
         $data['label'] = $row['descripcion'];
         $data['value'] = $row['hilo'];
+
         array_push($HilosData, $data);
       }
     }
