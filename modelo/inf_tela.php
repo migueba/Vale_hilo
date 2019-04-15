@@ -1,22 +1,14 @@
 <?php
+  session_start();
+
   require '../vendor/autoload.php' ;
 
   use PhpOffice\PhpSpreadsheet\Spreadsheet;
   use PhpOffice\PhpSpreadsheet\IOFactory;
 
-  // Copio el Archivo de Excel para que no ponga solod e lectura al archivo Original
-  $from = '\\\SERVIDORP\Planeacion de Hilo\PRONOSTICOS TELARES.xlsx' ;
-  /*$to = '\\\servidorp\e$\sistemas\CONSTRUCCION.xls' ;
-  copy($from,$to)
-
-  $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
-  $spreadsheet = $reader->load("05featuredemo.xlsx");
-  $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
-  */
   $TelasArray = array() ;
   $inputFileType = 'Xlsx';
   $inputFileName = '\\\SERVIDORP\Planeacion de Hilo\PRONOSTICOS TELARES.xlsx';
-
   /**  Create a new Reader of the type defined in $inputFileType  **/
   $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
   /**  Advise the Reader that we only want to load cell data  **/
@@ -25,22 +17,27 @@
   $spreadsheet = $reader->load($inputFileName) ;
   $sheet = $spreadsheet->getSheetByName("2013") ;
 
-  echo '<table border="1" cellpadding="8" >' ;
-  foreach ($sheet->getRowIterator() as $row) {
-    $CellIterator = $row->getCellIterator("B","F") ;
-    $CellIterator->setIterateOnlyExistingCells(false) ;
-    echo '<tr>';
-    foreach ($CellIterator as $Cell) {
-      if(!is_null($Cell)){
-        $value = $Cell->getValue() ;
-        echo '<td> '. $Cell .' '.$value . '</td>' ;
-        //$data['clave'] = $row['descripcion'];
-        //$data['pie'] = $row['hilo'];
-        //$data['trama'] = $row['hilo'];
-        //array_push($HilosData, $data);
-      }
-    }
-    echo '</tr>' ;
+  // Get the highest row and column numbers referenced in the worksheet
+  $highestRow = $sheet->getHighestRow(); // e.g. 10
+  $highestColumn = 'F'; // e.g 'F'
+  $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+  for ($row = 6; $row <= $highestRow; ++$row) {
+      //for ($col = 2; $col <= $highestColumnIndex; ++$col) {
+          $clave = $sheet->getCellByColumnAndRow(2, $row)->getValue();
+          $tela =  strtoupper($sheet->getCellByColumnAndRow(3, $row)->getValue());
+          $pie =  $sheet->getCellByColumnAndRow(4, $row)->getValue();
+          $trama =  $sheet->getCellByColumnAndRow(6, $row)->getValue();
+          if(!is_null($clave) && !is_null($tela) && !is_null($pie) && !is_null($trama) ){
+            $data['clave'] = $clave ;
+            $data['tela'] = $tela ;
+            $data['pie'] = $pie ;
+            $data['trama'] = $trama ;
+            array_push($TelasArray, $data);
+          }
+      //}
   }
-  echo '</table>' ;
+
+  $_SESSION["telas"] = $TelasArray;
+  //echo json_encode($TelasArray,JSON_UNESCAPED_UNICODE) ;
 ?>
