@@ -66,7 +66,7 @@
                 <span data-key="clave_hilo" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-4">
               <div class="form-group">
                 <label>Hilo</label>
                 <input type="text" id="hilos" name="hilos" class="form-control auto-widget" required/>
@@ -80,7 +80,14 @@
                 <span data-key="tipo" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-2">
+              <div class="form-group">
+                <label>Generico</label>
+                <input type="text" id="generico" name="generico" class="form-control auto-widget" required readonly/>
+                <span data-key="generico" class="label label-danger"></span>
+              </div>
+            </div>
+            <div class="col-lg-3">
               <div class="form-group" id="totales">
               </div>
             </div>
@@ -113,6 +120,9 @@
       // Busca el Nombre del Hilo usando su Clave
       $( function() {
         $(".form-group").on('change', '#clave_hilo', function(data) {
+          $("#contenido").html('');
+
+          $(this).after("<img src='images/loading.gif' alt='loading' />").fadeIn();
 
           $('#guardavale').prop('disabled', true);
           event.preventDefault();
@@ -126,6 +136,7 @@
 
                 $('input[id=hilos]').val(data.descripcion) ;
                 $('input[id=tipo]').val(data.prod) ;
+                $('input[id=generico]').val(data.generico) ;
                 event.preventDefault();
 
                 $.ajax({
@@ -205,6 +216,9 @@
             }else {
                $('input[id=pesototal]').val($totalpeso.toFixed(2)) ;
                $('input[id=bobinatotal]').val($totalbobinas) ;
+               $('input[name="detalle\[0\]\[bobinas\]"]').val($totalbobinas);
+               $('input[name="detalle\[0\]\[bobinas\]"]').trigger("change");
+
             }
         });
 
