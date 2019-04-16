@@ -9,7 +9,7 @@
   $mysqli->set_charset("utf8");
 
   $consulta = "SELECT IF(A.Prod_neta<>0.96,\"COMPRADO \",\"PRODUCIDO \") as prod ,
-    UPPER(A.descripcion) as descripcion, UPPER(A.generico) as generico
+    UPPER(A.descripcion) as descripcion
     FROM existencia A WHERE A.hilo = ". $_POST['idhilo'] ."  LIMIT 1";
 
   if ($resultado = $mysqli->query($consulta)) {
@@ -19,7 +19,6 @@
 
     $data['descripcion'] = $fila[1] ;
     $data['prod'] = $fila[0] ;
-    $data['generico'] = $fila[2] ;
 
     $resultado->close();
     $mysqli->close();
