@@ -66,11 +66,18 @@
                 <span data-key="clave_hilo" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-4">
               <div class="form-group">
                 <label>Hilo</label>
                 <input type="text" id="hilos" name="hilos" class="form-control auto-widget" required/>
                 <span data-key="hilos" class="label label-danger"></span>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <div class="form-group">
+                <label>Generico</label>
+                <input type="text" id="generico" name="generico" class="form-control auto-widget" required readonly/>
+                <span data-key="generico" class="label label-danger"></span>
               </div>
             </div>
             <div class="col-lg-2">
@@ -80,7 +87,7 @@
                 <span data-key="tipo" class="label label-danger"></span>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
               <div class="form-group" id="totales">
               </div>
             </div>
@@ -126,6 +133,7 @@
 
                 $('input[id=hilos]').val(data.descripcion) ;
                 $('input[id=tipo]').val(data.prod) ;
+                $('input[id=generico]').val(data.generico) ;
                 event.preventDefault();
 
                 $.ajax({
