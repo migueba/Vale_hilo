@@ -118,12 +118,6 @@
 
     <script >
       $( function() {
-        $( "#guardavale" ).keypress(function( event ) {
-          if ( event.which == 13 ) {
-             event.preventDefault();
-          }
-        });
-
         // Busca el Nombre del Hilo usando su Clave
         $(".form-group").on('change', '#clave_hilo', function(data){
           event.preventDefault();
