@@ -13,15 +13,6 @@
         $validaciones['turno'] = 'El campo turno es requerido';
     }
 
-    // dd/mm/yyyy
-    //if(!empty($_POST['fecha'])){
-    //    if(!is_date($_POST['fecha'])) {
-    //        $validaciones['fecha'] = 'El campo fecha requiere una fecha válida dd/mm/yyyy';
-    //    }else {
-    //      console.log($_POST['fecha']);
-    //    }
-    //}
-
     if(empty($_POST['idsupervisor'])){
         $validaciones['idsupervisor'] = 'El campo idsupervisor es requerido' ;
     }
@@ -30,16 +21,29 @@
         $validaciones['supervisor'] = 'El campo supervisor es requerido' ;
     }
 
-    //if (count($_POST['id_ent']) === 0){
-    //    $validaciones['id_ent'] = 'debe Selecionar al Menos una Entrada' ;
-    //}else {
-    //  console.log(count($_POST['id_ent']));
-    //}
+    if (count($_POST['detalle']) === 0){
+      $validaciones['detalle'] = 'debe Llenar los Campos Necesarios para Continuar' ;
+    }else{
+      foreach($_POST['detalle'] as $item){
+          foreach($item as $key => $value){
+            //echo $key; // Nombre de la variable(nom, des, rut, etc)
+            //echo $value; // Su valor
+            if(empty ($value)){
+              $validaciones['detalle'] = $key.' Tiene un Valor vacio,debe Llenar los Campos Necesarios para Continuar' ;
+              break 2;
+            }
+          }
+      }
+    }
+
+    if (count($_POST['id_ent']) === 0){
+        $validaciones['id_ent'] = 'debe Selecionar al Menos una Entrada' ;
+    }
 
     //if (count($_POST['detalle']) === 0){
     //    $validaciones['detalle'] = 'debe definir al menos un detalle';
     //}else {
-    //      //console.log($_POST['detalle']) ;
+    //      console.log($_POST['detalle']) ;
     //}
 
 

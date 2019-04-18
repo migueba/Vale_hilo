@@ -23,7 +23,12 @@
 
     $resultado->close();
     $mysqli->close();
-    echo json_encode($data,JSON_UNESCAPED_UNICODE);
+
+    if(!is_null($data['descripcion'])){
+      echo json_encode($data,JSON_UNESCAPED_UNICODE);
+    }else{
+      echo "No Hay Datos";
+    }
   }else{
     $mysqli->close();
     echo "Fallo la Conexion a la Base de Datos";

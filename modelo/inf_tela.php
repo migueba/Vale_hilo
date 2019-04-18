@@ -1,7 +1,6 @@
 <?php
-  session_start();
-
-  require '../vendor/autoload.php' ;
+  //require '../vendor/autoload.php' ;
+  require 'vendor/autoload.php' ;
 
   use PhpOffice\PhpSpreadsheet\Spreadsheet;
   use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -37,6 +36,7 @@
           }
       //}
   }
+  asort($TelasArray);
 
   $_SESSION["telas"] = $TelasArray;
   //echo json_encode($TelasArray,JSON_UNESCAPED_UNICODE) ;
