@@ -118,75 +118,162 @@
 
     <script >
       $( function() {
+        /*
+        $( "#clave_hilo" ).keypress(function( event ) {
+          event.preventDefault();
+          if (event.which == 13 ) {
+             //event.preventDefault();
+             $("#clave_hilo").trigger("change");
+          }
+        });
+
         // Busca el Nombre del Hilo usando su Clave
         $(".form-group").on('change', '#clave_hilo', function(data){
           event.preventDefault();
-
           $("#contenido").html('');
           $( "#waiting" ).show( "slow" );
           $('#guardavale').prop('disabled', true);
           var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
-          //$(this).after("<img src='images/loading.gif' alt='loading' />").fadeIn('fast',function() {
-            $.ajax({
-                url: "modelo/busca_hilo.php",
-                method: "POST",
-                data: { idhilo : idhilo_var },
-                dataType: "json",
+          $.ajax({
+              url: "modelo/busca_hilo.php",
+              method: "POST",
+              data: { idhilo : idhilo_var },
+              dataType: "json",
+            success: function(data){
+              $('input[id=hilos]').val(data.descripcion) ;
+              $('input[id=tipo]').val(data.prod) ;
+              $('input[id=generico]').val(data.generico) ;
+
+              $.ajax({
+                  url: "modelo/tabla_hilos.php",
+                  method: "POST",
+                  data: {idhilo : idhilo_var , tipo : $.trim($('input[id=tipo]').val())},
+                  dataType: "json",
                 success: function(data){
-                  $('input[id=hilos]').val(data.descripcion) ;
-                  $('input[id=tipo]').val(data.prod) ;
-                  $('input[id=generico]').val(data.generico) ;
-
-                  $.ajax({
-                    url: "modelo/tabla_hilos.php",
-                    method: "POST",
-                    data: {idhilo : idhilo_var , tipo : $.trim($('input[id=tipo]').val())},
-                    dataType: "json",
-                    success: function(data){
-                      $("#detalle").html('') ;
-                      $("#totales").html('') ;
-
-                      $('#guardavale').prop('disabled', true);
-
-                      $("#contenido").html('');
-                      if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-                        $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">BOLSA</th><th scope=\"col\">CAJA</th><th scope=\"col\">PALET</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
-                      }else{
-                        $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
-                      }
-                      /* Vemos que la respuesta no este vacía y sea una arreglo */
-                      if(data != null && $.isArray(data)){
-                        /* Recorremos tu respuesta con each */
-                        var i = 0 ;
-                        $.each(data, function(key, value){
-                          /* Vamos agregando a nuestra tabla las filas necesarias */
-                          $("#contenido").append("<tr><th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
-                          value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
-                          value.pesoneto +"</td><td>"+ value.bobinas +"</td></tr>");
-                          i++;
-                        });
-                        $("#contenido").append("</tbody>") ;
-                        $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
-                      }
-                    },
-                      error: function(r) {
-                        alert("Ocurrio un Incoveniente con la BD");
-                      },
-                  });
-                },
-                error: function(r) {
-                  $('input[id=hilos]').val("") ;
-                  $('input[id=tipo]').val("") ;
-                  $('input[id=generico]').val("") ;
+                  $("#detalle").html('') ;
+                  $("#totales").html('') ;
+                  $('#guardavale').prop('disabled', true);
 
                   $("#contenido").html('');
-                  $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
-                  alert("No Existe la Clave de Hilo");
+                  if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+                    $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">BOLSA</th><th scope=\"col\">CAJA</th><th scope=\"col\">PALET</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
+                  }else{
+                    $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
+                  }
+                  // Vemos que la respuesta no este vacía y sea una arreglo
+                  if(data != null && $.isArray(data)){
+                    // Recorremos tu respuesta con each
+                    var i = 0 ;
+                    $.each(data, function(key, value){
+                    // Vamos agregando a nuestra tabla las filas necesarias
+                    $("#contenido").append("<tr><th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
+                      value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
+                      value.pesoneto +"</td><td>"+ value.bobinas +"</td></tr>");
+                      i++;
+                    });
+                    $("#contenido").append("</tbody>") ;
+                    $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
+                  }
                 },
-            });
-          //});
+                error: function(r) {
+                  alert("Ocurrio un Incoveniente con la BD");
+                },
+              });
+            },
+            error: function(r) {
+              $('input[id=hilos]').val("") ;
+              $('input[id=tipo]').val("") ;
+              $('input[id=generico]').val("") ;
+
+              $("#contenido").html('');
+              $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
+              alert("No Existe la Clave de Hilo");
+            },
+          });
           $( "#waiting" ).hide( "slow" );
         });
+        */
+
+
+
+        $("#clave_hilo").on({
+          change: function(data){
+            event.preventDefault();
+            ejecuta_busqueda();
+          },
+          keypress: function(event){
+            if (event.which == 13 ) {
+              event.preventDefault();
+              ejecuta_busqueda();
+            }
+          }
+        });
+
+        function ejecuta_busqueda(){
+          $("#contenido").html('');
+          $( "#waiting" ).show( "slow" );
+          $('#guardavale').prop('disabled', true);
+          var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
+          $.ajax({
+              url: "modelo/busca_hilo.php",
+              method: "POST",
+              data: { idhilo : idhilo_var },
+              dataType: "json",
+            success: function(data){
+              $('input[id=hilos]').val(data.descripcion) ;
+              $('input[id=tipo]').val(data.prod) ;
+              $('input[id=generico]').val(data.generico) ;
+
+              $.ajax({
+                  url: "modelo/tabla_hilos.php",
+                  method: "POST",
+                  data: {idhilo : idhilo_var , tipo : $.trim($('input[id=tipo]').val())},
+                  dataType: "json",
+                success: function(data){
+                  $("#detalle").html('') ;
+                  $("#totales").html('') ;
+                  $('#guardavale').prop('disabled', true);
+
+                  $("#contenido").html('');
+                  if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+                    $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">BOLSA</th><th scope=\"col\">CAJA</th><th scope=\"col\">PALET</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
+                  }else{
+                    $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
+                  }
+                  /* Vemos que la respuesta no este vacía y sea una arreglo */
+                  if(data != null && $.isArray(data)){
+                    /* Recorremos tu respuesta con each */
+                    var i = 0 ;
+                    $.each(data, function(key, value){
+                    /* Vamos agregando a nuestra tabla las filas necesarias */
+                    $("#contenido").append("<tr><th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
+                      value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
+                      value.pesoneto +"</td><td>"+ value.bobinas +"</td></tr>");
+                      i++;
+                    });
+                    $("#contenido").append("</tbody>") ;
+                    $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
+                  }
+                },
+                error: function(r) {
+                  alert("Ocurrio un Incoveniente con la BD");
+                },
+              });
+            },
+            error: function(r) {
+              $('input[id=hilos]').val("") ;
+              $('input[id=tipo]').val("") ;
+              $('input[id=generico]').val("") ;
+
+              $("#contenido").html('');
+              $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
+              alert("No Existe la Clave de Hilo");
+            },
+          });
+          $( "#waiting" ).hide( "slow" );
+        }
+
+
 
         //script cuando le da click a un chebock
         $("#contenido").on('click', '.mycheck', function(data) {
@@ -312,12 +399,14 @@
           var $kgs_sel  = parseFloat($('input[id=pesototal]').val()) ;
           var $bobi_sel = parseInt($('input[id=bobinatotal]').val()) ;
           var $puso_bobina =  parseInt($(this).val()) ;
-          var $tipo_hilo = $('input[id=tipo]').val() ;
+          var $tipo_hilo = $.trim($('input[id=tipo]').val()) ;
 
           $('#guardavale').prop('disabled', true);
 
           if($tipo_hilo != "COMPRADO"){
             $(':text[ name^="detalle['+$(this).attr('data-id')+'][kgs]" ]').val( (($puso_bobina*$kgs_sel)/$bobi_sel).toFixed(2) ) ;
+          }else{
+            $(':text[ name^="detalle['+$(this).attr('data-id')+'][kgs]" ]').val(0);
           }
 
           var $totalagregado = 0 ;
@@ -345,14 +434,15 @@
                   if($tipo_hilo != "COMPRADO"){
                     $('input[name="detalle\['+key+'\]\[kgs\]"]').val( ((parseInt($('input[name="detalle\['+key+'\]\[bobinas\]"]').val())*$kgs_sel)/$bobi_sel).toFixed(2) ) ;
                     $('#guardavale').prop('disabled', false);
+                    //$('#guardavale').preventDefault();
                     alert("No se puede Exceder de mas de "+$bobi_sel+" Bobinas");
                   }
-
                   $haybobinas_vacias = key ;
                   $eliminar_detalles = 1 ;
                 }
               }
           });
+
 
           if( ($totalagregado < $bobi_sel) && ($haybobinas_vacias === 0) ){
             $("#detalle").append("<div id=\"existe_detalle"+(parseInt($(this).attr('data-id'))+1)+"\" class=\"row no-gutters\" >"+
