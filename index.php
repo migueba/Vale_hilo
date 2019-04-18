@@ -118,20 +118,11 @@
 
     <script >
       $( function() {
-
-        $( "#clave_hilo" ).keypress(function( event ) {
-          event.preventDefault();
-          if (event.which == 13 ) {
-             //event.preventDefault();
-             $("#clave_hilo").trigger("change");
-          }
-        });
-
         // Busca el Nombre del Hilo usando su Clave
         $(".form-group").on('keydown', '#clave_hilo', function(event){
           if (event.which == 13 ) {
             event.preventDefault();
-          
+
             $("#contenido").html('');
             $( "#waiting" ).show( "slow" );
             $('#guardavale').prop('disabled', true);
