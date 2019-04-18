@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<?php session_start(); //include("modelo/inf_tela.php");?>
+<?php session_start();
+  if(!isset($_SESSION["telas"])){
+    include("modelo/inf_tela.php") ;
+  }
+?>
 <html lang="es">
 
 <head>
@@ -167,9 +171,11 @@
                       $("#contenido").append("</tbody>") ;
                       $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
                     }
+                    $( "#waiting" ).hide( "slow" );
                   },
                   error: function(r) {
                     alert("Ocurrio un Incoveniente con la BD");
+                    $( "#waiting" ).hide( "slow" );
                   },
                 });
               },
@@ -181,96 +187,12 @@
                 $("#contenido").html('');
                 $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
                 alert("No Existe la Clave de Hilo");
+                $( "#waiting" ).hide( "slow" );
               },
             });
-            $( "#waiting" ).hide( "slow" );
+
           }
         });
-
-
-
-        /*
-        $(".form-group").on('change keypress', '#clave_hilo', function(event){
-          console.log(event.eventPhase);
-          if(event.type === "change"){
-            if ($numero_event != 0){
-              event.preventDefault();
-              ejecuta_busqueda();
-            }
-            $numero_event++;
-          }else if(event.type === "keypress"){
-            if (event.which == 13 ) {
-              event.preventDefault();
-              ejecuta_busqueda();
-            }
-          }
-        });
-
-        function ejecuta_busqueda(){
-          $("#contenido").html('');
-          $( "#waiting" ).show( "slow" );
-          $('#guardavale').prop('disabled', true);
-          var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
-          $.ajax({
-              url: "modelo/busca_hilo.php",
-              method: "POST",
-              data: { idhilo : idhilo_var },
-              dataType: "json",
-            success: function(data){
-              $('input[id=hilos]').val(data.descripcion) ;
-              $('input[id=tipo]').val(data.prod) ;
-              $('input[id=generico]').val(data.generico) ;
-
-              $.ajax({
-                  url: "modelo/tabla_hilos.php",
-                  method: "POST",
-                  data: {idhilo : idhilo_var , tipo : $.trim($('input[id=tipo]').val())},
-                  dataType: "json",
-                success: function(data){
-                  $("#detalle").html('') ;
-                  $("#totales").html('') ;
-                  $('#guardavale').prop('disabled', true);
-
-                  $("#contenido").html('');
-                  if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-                    $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">BOLSA</th><th scope=\"col\">CAJA</th><th scope=\"col\">PALET</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
-                  }else{
-                    $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
-                  }
-                  // Vemos que la respuesta no este vacía y sea una arreglo
-                  if(data != null && $.isArray(data)){
-                    // Recorremos tu respuesta con each
-                    var i = 0 ;
-                    $.each(data, function(key, value){
-                    // Vamos agregando a nuestra tabla las filas necesarias
-                    $("#contenido").append("<tr><th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
-                      value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
-                      value.pesoneto +"</td><td>"+ value.bobinas +"</td></tr>");
-                      i++;
-                    });
-                    $("#contenido").append("</tbody>") ;
-                    $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
-                  }
-                },
-                error: function(r) {
-                  alert("Ocurrio un Incoveniente con la BD");
-                },
-              });
-            },
-            error: function(r) {
-              $('input[id=hilos]').val("") ;
-              $('input[id=tipo]').val("") ;
-              $('input[id=generico]').val("") ;
-
-              $("#contenido").html('');
-              $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
-              alert("No Existe la Clave de Hilo");
-            },
-          });
-          $( "#waiting" ).hide( "slow" );
-        }
-        */
-
 
         //script cuando le da click a un chebock
         $("#contenido").on('click', '.mycheck', function(data) {
@@ -328,7 +250,7 @@
               "<div class=\"col-lg-2\">" +
                 "<div class=\"form-group\">"+
                   "<label>Destino</label>"+
-                  "<select class=\"form-control\" data-id=\"0\" name=\"detalle[0][destino]\" required>"+
+                  "<select class=\"detalle-destino form-control\" data-id=\"0\" name=\"detalle[0][destino]\" required>"+
                     "<option disabled selected value></option>"+
                     "<option value=\"1\">Urdido</option>"+
                     "<option value=\"2\">Tejido</option>"+
@@ -346,13 +268,13 @@
               "<div class=\"col-lg-2\">"+
                 "<div class=\"form-group\">" +
                   "<label>Cant. P.</label>"+
-                  "<input type=\"text\" data-id=\"0\" name=\"detalle[0][cantidad]\" class=\"detalle-cantidad form-control\" required/>"+
+                  "<input class=\"detalle-cantidad form-control\" type=\"text\" data-id=\"0\" name=\"detalle[0][cantidad]\" required/>"+
                 "</div>"+
               "</div>"+
               "<div class=\"col-lg-2\">" +
                 "<div class=\"form-group\">"+
                   "<label>Present.</label>"+
-                  "<select data-id=\"0\" name=\"detalle[0][presenta]\" class=\"form-control presenta_detalle\" required>"+
+                  "<select class=\"form-control presenta_detalle\" data-id=\"0\" name=\"detalle[0][presenta]\" required>"+
                     "<option disabled selected value></option>"+
                     "<option value=\"1\">TARIMA</option>"+
                     "<option value=\"2\">BOLSA</option>"+
@@ -458,7 +380,7 @@
               "<div class=\"col-lg-2\">" +
                 "<div class=\"form-group\">"+
                   "<label>Destino</label>"+
-                  "<select class=\"form-control\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" id=\"destino_detalle\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][destino]\" required>"+
+                  "<select class=\"detalle-destino form-control\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" id=\"destino_detalle\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][destino]\" required>"+
                     "<option disabled selected value></option>"+
                     "<option value=\"1\">Urdido</option>"+
                     "<option value=\"2\">Tejido</option>"+
@@ -470,13 +392,13 @@
               "<div class=\"col-lg-2\">"+
                 "<div class=\"form-group\">" +
                   "<label>Tela</label>"+
-                  "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][tela]\" class=\"form-control \" required/>"+
+                  "<input class=\"form-control\" type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][tela]\" required/>"+
                 "</div>"+
               "</div>"+
               "<div class=\"col-lg-2\">"+
                 "<div class=\"form-group\">" +
                   "<label>Cant. P.</label>"+
-                  "<input type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][cantidad]\"  class=\"detalle-cantidad form-control\" required/>"+
+                  "<input class=\"detalle-cantidad form-control\" type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][cantidad]\" required/>"+
                 "</div>"+
               "</div>"+
               "<div class=\"col-lg-2\">" +
@@ -512,10 +434,36 @@
           }
         });
 
+        // Funcion para el autocompletar de la tela
+        $("#detalle").on('change', '.detalle-destino', function(data) {
+          var $posicion_ = $(this).attr('data-id') ;
+          var $destino_sel = $(this).val() ;
+          $('input[name="detalle\['+$posicion_+'\]\[tela\]"]').autocomplete({
+            source: function( request, response ) {
+              $.ajax( {
+                url: "modelo/autocompletar.php",
+                method: "POST",
+                dataType: "json",
+                data: {
+                  term: request.term,
+                  destino: $destino_sel
+                },
+                success: function( data ) {
+                  response( data );
+                }
+              } );
+            },
+            minLength: 1,
+            autoFocus: true,
+            select: function( event, ui ) {
+              $("#clave_hilo").val(ui.item.value);
+            }
+          });
+        });
+
         // AutoComplete en Jquery
         $( "#hilos" ).autocomplete({
           source: function( request, response ) {
-            console.log(request.term);
             $.ajax( {
               url: "modelo/autocompletar.php",
               dataType: "json",
@@ -527,7 +475,7 @@
               }
             } );
           },
-          minLength: 4,
+          minLength: 3,
           autoFocus: true,
           select: function( event, ui ) {
             $("#clave_hilo").val(ui.item.value);
