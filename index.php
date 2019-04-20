@@ -27,6 +27,9 @@
     <div class="container">
         <h2 class="page-header">Vale de Hilo</h2>
         <form method="POST" id="formulario" action="modelo/guardar_vale.php">
+          <div class="row">
+            <span data-key="guardadoerror" class="badge badge-danger"></span>
+          </div>
 
           <div class="row">
             <div class="col-lg-1">
@@ -489,6 +492,7 @@
                 success: function(r){
                     if(!r.response) {
                         for(var k in r.errors){
+                            console.log(r.errors[k]);
                             $("span[data-key='" + k + "']").text(r.errors[k]);
                         }
                     }
