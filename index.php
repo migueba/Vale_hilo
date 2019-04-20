@@ -123,8 +123,8 @@
     <script >
       $( function() {
         // Busca el Nombre del Hilo usando su Clave
-        $(".form-group").on('keydown', '#clave_hilo', function(event){
-          if (event.which == 13 ) {
+        $(".form-group").on('change', '#clave_hilo', function(event){
+          //if (event.which == 13 ) {
             event.preventDefault();
 
             $("#contenido").html('');
@@ -191,7 +191,7 @@
               },
             });
 
-          }
+        //  }
         });
 
         //script cuando le da click a un chebock
@@ -438,30 +438,22 @@
         $("#detalle").on('change', '.detalle-destino', function(data) {
           var $posicion_ = $(this).attr('data-id') ;
           var $destino_sel = $(this).val() ;
-          $('input[name="detalle\['+$posicion_+'\]\[tela\]"]').autocomplete({
-            source: function( request, response ) {
-              $.ajax( {
-                url: "modelo/autocompletar.php",
-                method: "POST",
-                dataType: "json",
-                data: {
-                  term: request.term,
-                  destino: $destino_sel
-                },
-                success: function( data ) {
-                  response( data );
-                }
-              } );
-            },
-            minLength: 1,
-            autoFocus: true,
-            select: function( event, ui ) {
-              $("#clave_hilo").val(ui.item.value);
+          var $general_hilo = $.trim($('#generico').val()) ;
+
+          $('#telasdestino'+$posicion_).remove();
+          $('#existe_detalle'+$posicion_).append('<datalist id="telasdestino'+$posicion_+'"></datalist>');
+          $.getJSON( "modelo/telas_autocompleta.php",{destino : $destino_sel, general : $general_hilo},
+            function( data ) {
+              $.each( data, function( key, val ) {
+                $('#telasdestino'+$posicion_).append('<option>'+val+'</option>');
+              });
             }
-          });
+          );
+          $('input[name="detalle\['+$posicion_+'\]\[tela\]"]').attr("list", "telasdestino"+$posicion_);
         });
 
-        // AutoComplete en Jquery
+
+        // AutoComplete en la lista de telas
         $( "#hilos" ).autocomplete({
           source: function( request, response ) {
             $.ajax( {

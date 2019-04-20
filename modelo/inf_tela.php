@@ -7,7 +7,9 @@
 
   $TelasArray = array() ;
   $inputFileType = 'Xlsx';
-  $inputFileName = '\\\SERVIDORP\Planeacion de Hilo\PRONOSTICOS TELARES.xlsx';
+  //$inputFileName = '\\\SERVIDORP\Planeacion de Hilo\PRONOSTICOS TELARES.xlsx';
+
+  $inputFileName = 'F:\PRONOSTICOS TELARES.xlsx' ;
   /**  Create a new Reader of the type defined in $inputFileType  **/
   $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
   /**  Advise the Reader that we only want to load cell data  **/
@@ -27,7 +29,15 @@
           $tela =  strtoupper($sheet->getCellByColumnAndRow(3, $row)->getValue());
           $pie =  $sheet->getCellByColumnAndRow(4, $row)->getValue();
           $trama =  $sheet->getCellByColumnAndRow(6, $row)->getValue();
+
           if(!is_null($clave) && !is_null($tela) && !is_null($pie) && !is_null($trama) ){
+            if (gettype($pie) != 'string' ){
+              $pie = strval($pie) ;
+            }
+            if (gettype($trama) != 'string' ){
+              $trama = strval($trama) ;
+            }
+
             $data['clave'] = $clave ;
             $data['tela'] = $tela ;
             $data['pie'] = $pie ;
