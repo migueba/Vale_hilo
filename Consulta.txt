@@ -1,0 +1,41 @@
+Eliminar duplicados en Existencia
+
+ALTER TABLE `urdido_engomado`.`existencia` 
+CHANGE COLUMN `hilo` `hilo` DECIMAL(5,2) NOT NULL ;
+
+ALTER TABLE `urdido_engomado`.`existencia` 
+ADD INDEX `Clave_hilo` (`hilo` ASC),
+ADD UNIQUE INDEX `h_practico_UNIQUE` (`h_practico` ASC);
+
+CREATE TABLE `urdido_engomado`.`vale_hilo` (
+  `idvale_hilo` INT NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `supervisor` INT NOT NULL,
+  `clave_hilo` DECIMAL(5,2) NOT NULL,
+  `turno` INT NOT NULL,
+  `estado` INT NOT NULL DEFAULT -1,
+  PRIMARY KEY (`idvale_hilo`),
+  INDEX `fk_clve_hilo_idx` (`clave_hilo` ASC),
+  CONSTRAINT `fk_clve_hilo`
+    FOREIGN KEY (`clave_hilo`)
+    REFERENCES `urdido_engomado`.`existencia` (`hilo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+COMMENT = 'Almacena todos los vales de hilo realizados';
+
+
+CREATE TABLE `urdido_engomado`.`vale_hilo_detalle` (
+  `idvale_hilo_detalle` INT NOT NULL AUTO_INCREMENT,
+  `Bobinas` INT NOT NULL,
+  `kilos` DECIMAL(15,4) NOT NULL,
+  `destino` INT NOT NULL,
+  `tela` VARCHAR(15) NULL,
+  `idvale_hilo` INT NULL,
+  PRIMARY KEY (`idvale_hilo_detalle`),
+  INDEX `FKid_valehilo_idx` (`idvale_hilo` ASC),
+  CONSTRAINT `FKid_valehilo`
+    FOREIGN KEY (`idvale_hilo`)
+    REFERENCES `urdido_engomado`.`vale_hilo` (`idvale_hilo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+COMMENT = 'Guarda la informacion detallada del vale de hilo';

@@ -28,7 +28,9 @@
         <h2 class="page-header">Vale de Hilo</h2>
         <form method="POST" id="formulario" action="modelo/guardar_vale.php">
           <div class="row">
-            <span data-key="guardadoerror" class="badge badge-danger"></span>
+            <div class="col-lg-12">
+              <span data-key="guardadoerror" class="badge badge-danger"></span>
+            </div>
           </div>
 
           <div class="row">
