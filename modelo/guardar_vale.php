@@ -53,14 +53,7 @@
 
   function guardar_info() {
     if(!empty($_POST)){
-      // Database Structure
-      $host="localhost";
-      $username="root";
-      $password="";
-      $databasename="urdido_engomado";
-
-      $mysqli = new mysqli($host,$username,$password,$databasename);
-      $mysqli->set_charset("utf8");
+      include("bd.php") ;
 
       $date = str_replace('/', '-',$_POST['fecha']) ;
       $newDate = date("Y-m-d", strtotime($date)) ;

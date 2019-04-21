@@ -1,12 +1,5 @@
 <?php
-  // Database Structure
-  $host="localhost";
-  $username="root";
-  $password="";
-  $databasename="urdido_engomado";
-
-  $mysqli = new mysqli($host,$username,$password,$databasename);
-  $mysqli->set_charset("utf8");
+  include("bd.php") ;
 
   $consulta = "SELECT IF(A.Prod_neta<>0.96,\"COMPRADO \",\"PRODUCIDO \") as prod ,
     UPPER(A.descripcion) as descripcion, UPPER(A.generico) as generico

@@ -1,12 +1,5 @@
 <?php
-  // Database Structure
-  $host="localhost";
-  $username="root";
-  $password="";
-  $databasename="urdido_engomado";
-
-  $mysqli = new mysqli($host,$username,$password,$databasename);
-  $mysqli->set_charset("utf8");
+  include("bd.php") ;
 
   $consulta = "SELECT UPPER(A.descripcion) as descripcion, A.hilo
     FROM existencia A
