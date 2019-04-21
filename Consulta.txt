@@ -31,6 +31,8 @@ CREATE TABLE `urdido_engomado`.`vale_hilo_detalle` (
   `destino` INT NOT NULL,
   `tela` VARCHAR(15) NULL,
   `idvale_hilo` INT NULL,
+  `presenta` INT NOT NULL AFTER `idvale_hilo`,
+  `presenta_cant` INT NOT NULL AFTER `presenta`,
   PRIMARY KEY (`idvale_hilo_detalle`),
   INDEX `FKid_valehilo_idx` (`idvale_hilo` ASC),
   CONSTRAINT `FKid_valehilo`
@@ -39,3 +41,7 @@ CREATE TABLE `urdido_engomado`.`vale_hilo_detalle` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 COMMENT = 'Guarda la informacion detallada del vale de hilo';
+
+
+ALTER TABLE `urdido_engomado`.`vale_entrada` 
+ADD COLUMN `tarima` INT NOT NULL DEFAULT 0 AFTER `id_entrada`;

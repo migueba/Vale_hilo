@@ -66,22 +66,24 @@
         // Consigo el ultimo ID insertado
         if ($resultado2 = $mysqli->query($consulta2)){
           $ultimo_idvale = $resultado2->fetch_row() ;
+          $resultado2->close();
           // anexo la lista de Id_Entradas que Saldran en caso de que el Hilo sea Producido
           if(trim($_POST['tipo']) === "PRODUCIDO"){
             $lista_entradas = $_POST['id_ent'] ;
             for($i=0; $i < count($lista_entradas); $i++){
-              $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada)
-                VALUES(". $ultimo_idvale[0] .",".$lista_entradas[$i].")" ;
+              $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada)"
+                ."VALUES(". $ultimo_idvale[0] .",".$lista_entradas[$i].")" ;
               $mysqli->query($consulta3) ;
             }
           }
           // Lleno la informacion de detalle
           $lista_detalle = $_POST['detalle'] ;
           for($i=0; $i < count($lista_detalle); $i++){
-            $consulta3 = "INSERT INTO vale_hilo_detalle(Bobinas,kilos,destino,tela,idvale_hilo)
-              VALUES(".$lista_detalle[0]['bobinas'].",".$lista_detalle[0]['kgs'].",".$lista_detalle[0]['destino']
-                .",\"".$lista_detalle[0]['tela']."\",".$ultimo_idvale[0].")" ;
-            $mysqli->query($consulta3) ;
+            $consulta4 = "INSERT INTO vale_hilo_detalle(Bobinas,kilos,destino,tela,idvale_hilo,presenta_cant,presenta)"
+              ." VALUES(".$lista_detalle[$i]['bobinas'].",".$lista_detalle[$i]['kgs'].","
+              .$lista_detalle[$i]['destino'].",\"".$lista_detalle[$i]['tela']."\",".$ultimo_idvale[0].","
+              .$lista_detalle[$i]['cantidad'].",".$lista_detalle[$i]['presenta'].")" ;
+            $mysqli->query($consulta4) ;
           }
         }
       }else{

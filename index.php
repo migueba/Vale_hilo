@@ -29,7 +29,9 @@
         <form method="POST" id="formulario" action="modelo/guardar_vale.php">
           <div class="row">
             <div class="col-lg-12">
-              <span data-key="guardadoerror" class="badge badge-danger"></span>
+              <div class="form-group">
+                <span data-key="guardadoerror" class="badge badge-danger"></span>
+              </div>
             </div>
           </div>
 
@@ -295,7 +297,7 @@
           }else{
             // Si el hilo no es comprado se desabilitan las sigueintes opciones
             $('select option:contains("TARIMA")').prop('selected',true);
-            $('.presenta_detalle').prop('disabled', true);
+            $('.presenta_detalle').prop('readonly', true);
             $('.detalle-cantidad').prop('readonly', true);
             $('.detalle-kgs').prop('readonly', true);
           }
@@ -427,7 +429,7 @@
             }else{
               $('select option:contains("TARIMA")').prop('selected',true);
 
-              $('.presenta_detalle').prop('disabled', true);
+              $('.presenta_detalle').prop('readonly', true);
               $('.detalle-kgs').prop('readonly', true);
 
               $('.detalle-cantidad').val( $('input[name="detalle\[0\]\[cantidad\]"]').val() );
@@ -485,22 +487,23 @@
         var form = $("#formulario");
         form.submit(function(){
             event.preventDefault();
-            form.find('.label-danger').text('');
+            form.find('.badge-danger').text('');
             $.ajax({
                 url: "modelo/guardar_vale.php",
                 method: "POST",
                 data: form.serialize(),
                 dataType: "json",
                 success: function(r){
-                    if(!r.response) {
+                  if(!r.response) {
                         for(var k in r.errors){
                             console.log(r.errors[k]);
                             $("span[data-key='" + k + "']").text(r.errors[k]);
                         }
                     }
+                    location.reload();
                 },
-                error: function(r) {
-                  alert("Error");
+                error: function(xhr, ajaxOptions, thrownError){
+                  alert(xhr.status);
                 }
             });
             return false;

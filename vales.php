@@ -10,7 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <title>Vale de Hilo</title>
-  
+
   <script src="js/jquery.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
@@ -72,7 +72,8 @@
         });
 
         $("#contenido").on('click', '.clickojo', function(data) {
-          //alert($(this).attr('id-vale'));
+          var id_vale = $(this).attr('id-vale') ;
+          window.open('http://localhost/vale_hilo/modelo/ver_vale.php?id_vale='+id_vale, '_blank');
         });
 
       });
