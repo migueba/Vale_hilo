@@ -73,7 +73,7 @@
 
         $("#contenido").on('click', '.clickojo', function(data) {
           var id_vale = $(this).attr('id-vale') ;
-          window.open('http://localhost/vale_hilo/modelo/ver_vale.php?id_vale='+id_vale, '_blank');
+          window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.php?id_vale='+id_vale, '_blank');
         });
 
       });

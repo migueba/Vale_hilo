@@ -7,6 +7,7 @@
   $Palet = 0 ;
   $Bolsas = 0 ;
   $Tarimas = "";
+  $TarimasT = 0;
 
   $consulta = "SELECT A.idvale_hilo as id, A.Fecha, A.turno,
     B.Bobinas, B.Kilos,
@@ -50,9 +51,15 @@
 
         $result = $mysqli->query($consul) ;
 
+        $i = 0 ;
         while($row2 = mysqli_fetch_array($result)){
           $dato = (string) $row2['tarima'] ;
-          $Tarimas = $Tarimas. "   " .$dato ;
+
+          // IF Abreviado
+          $Tarimas = ($i<>0) ? $Tarimas. " , " .$dato : $Tarimas. "" .$dato;
+
+          $TarimasT++;
+          $i++;
         }
 
         $result->close();

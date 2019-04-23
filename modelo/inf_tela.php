@@ -7,9 +7,9 @@
 
   $TelasArray = array() ;
   $inputFileType = 'Xlsx';
-  //$inputFileName = '\\\SERVIDORP\Planeacion de Hilo\PRONOSTICOS TELARES.xlsx';
+  $inputFileName = '\\\SERVIDORP\Planeacion de Hilo\PRONOSTICOS TELARES.xlsx';
 
-  $inputFileName = 'F:\PRONOSTICOS TELARES.xlsx' ;
+  //$inputFileName = 'F:\PRONOSTICOS TELARES.xlsx' ;
   /**  Create a new Reader of the type defined in $inputFileType  **/
   $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
   /**  Advise the Reader that we only want to load cell data  **/

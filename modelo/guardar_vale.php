@@ -1,12 +1,12 @@
 <?php
   $validaciones = [];
 
-  function is_date($value) {
-    $value = explode('/', $value);
+  //function is_date($value) {
+  //  $value = explode('/', $value);
 
-    if(count($value) !== 3) return false;
-    return @checkdate ( $value[1] , $value[0] , $value[2] );
-  }
+  //  if(count($value) !== 3) return false;
+  //  return @checkdate ( $value[1] , $value[0] , $value[2] );
+  //}
 
   if(!empty($_POST)){
     if(empty($_POST['turno'])){
@@ -41,7 +41,7 @@
     }
 
     if (count($validaciones) === 0){
-      guardar_info() ;
+      $validaciones['id_vale'] = guardar_info() ;
     }
 
     echo json_encode([
@@ -67,6 +67,7 @@
         if ($resultado2 = $mysqli->query($consulta2)){
           $ultimo_idvale = $resultado2->fetch_row() ;
           $resultado2->close();
+
           // anexo la lista de Id_Entradas que Saldran en caso de que el Hilo sea Producido
           if(trim($_POST['tipo']) === "PRODUCIDO"){
             $lista_entradas = $_POST['id_ent'] ;
@@ -83,16 +84,20 @@
               ." VALUES(".$lista_detalle[$i]['bobinas'].",".$lista_detalle[$i]['kgs'].","
               .$lista_detalle[$i]['destino'].",\"".$lista_detalle[$i]['tela']."\",".$ultimo_idvale[0].","
               .$lista_detalle[$i]['cantidad'].",".$lista_detalle[$i]['presenta'].")" ;
+
             $mysqli->query($consulta4) ;
           }
         }
       }else{
-        $validaciones['guardadoerror'] = 'Ocurrio un Error al guardar la informacion' ;
+        //$validaciones['guardadoerror'] = 'Ocurrio un Error al guardar la informacion' ;
       }
-      $mysqli->close();
     }else{
-      $validaciones['guardadoerror'] = 'Ocurrio un Error al guardar la informacion' ;
+      //$validaciones['guardadoerror'] = 'Ocurrio un Error al guardar la informacion' ;
     }
+
+    $mysqli->close();
+
+    return strval($ultimo_idvale[0]) ;
   }
 
 ?>

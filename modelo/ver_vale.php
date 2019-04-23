@@ -17,26 +17,46 @@
 
   <body>
     <main role="main" class="container" style="border-width: 2px; border-style: dashed; border-color: black; ">
-      <h3 class="mt-5 text-center">Vale de Hilo N°<?php echo $_GET['id_vale']; ?></h3>
       <div class="row">
-        <div class="col-md-3" >
-          <p>Fecha: <strong><?php echo date("d-m-Y",strtotime($valedata[0]['Fecha'])); ?></strong></p>
-          <p>Hilo: <strong><?php echo $valedata[0]['hilo']; ?></strong></p>
-          <p>Bobinas: <strong><?php echo $total_bobinas; ?></strong></p>
+        <div class="col-md-4" >
+          <img style="height: 100%; width: 100%; display: block;"  src="../images/FABRICA MARÍA SIN FONDO_negro_corta.png" />
         </div>
-        <div class="col-md-6" >
-          <p>Supervisor: <strong><?php echo $valedata[0]['supervisor']; ?></strong></p>
-          <p><strong><?php echo $valedata[0]['descripcion']; ?></strong></p>
-          <p>Kilos: <strong><?php echo $total_kilos; ?></strong></p>
-        </div>
-        <div class="col-md-3" >
-          <p>Turno: <strong><?php echo $valedata[0]['turno']; ?></strong></p>
-          <p><p><strong><?php echo $valedata[0]['tipo']; ?></strong></p></p>
-          <p>Tarimas: <strong><?php echo $Tarimas; ?></strong></p>
+        <div class="col-md-8" >
+          <h3 class="mt-5 text-center">Vale de Hilo N°<?php echo $_GET['id_vale']; ?></h3>
         </div>
       </div>
 
       <div class="row">
+        <div class="col-md-3" >
+          <p>Fecha: <strong><?php echo date("d-m-Y",strtotime($valedata[0]['Fecha'])); ?></strong></p>
+          <p>Hilo: <strong><?php echo $valedata[0]['hilo']; ?></strong></p>
+          <p>Bobinas: <strong><?php echo number_format($total_bobinas,2); ?></strong></p>
+        </div>
+        <div class="col-md-6" >
+          <p>Supervisor: <strong><?php echo $valedata[0]['supervisor']; ?></strong></p>
+          <p><strong><?php echo $valedata[0]['descripcion']; ?></strong></p>
+          <p>Tarimas: <strong><?php echo $Tarimas; ?></strong></p>
+        </div>
+        <div class="col-md-3" >
+          <p>Turno: <strong><?php echo $valedata[0]['turno']; ?></strong></p>
+          <p><p><strong><?php echo $valedata[0]['tipo']; ?></strong></p></p>
+          <p>Kilos: <strong><?php echo number_format($total_kilos,2); ?></strong></p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3" >
+            <p>Bolsas: <strong><?php echo $Bolsas; ?></strong></p>
+        </div>
+        <div class="col-md-3" >
+            <p>Cajas: <strong><?php echo $Cajas; ?></strong></p>
+        </div>
+        <div class="col-md-3" >
+            <p>Palet: <strong><?php echo $Palet; ?></strong></p>
+        </div>
+        <div class="col-md-3" >
+            <p>Tarimas: <strong><?php echo $TarimasT; ?></strong></p>
+        </div>
       </div>
 
       <div class="row">

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<?php session_start();
+<?php
+  session_start();
+  $_SESSION = array();
   if(!isset($_SESSION["telas"])){
     include("modelo/inf_tela.php") ;
   }
@@ -495,15 +497,17 @@
                 dataType: "json",
                 success: function(r){
                   if(!r.response) {
-                        for(var k in r.errors){
-                            console.log(r.errors[k]);
-                            $("span[data-key='" + k + "']").text(r.errors[k]);
-                        }
+                    for(var k in r.errors){
+                      $("span[data-key='" + k + "']").text(r.errors[k]);
                     }
-                    location.reload();
+                  }
+                  window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.php?id_vale='+r.errors['id_vale'], '_blank');
+                  location.reload();
                 },
-                error: function(xhr, ajaxOptions, thrownError){
+                error: function(xhr, textStatus, errorThrown){
                   alert(xhr.status);
+                  console.log(textStatus);
+                  console.log(errorThrown);
                 }
             });
             return false;
