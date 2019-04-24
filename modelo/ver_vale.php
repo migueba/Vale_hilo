@@ -35,7 +35,7 @@
         <div class="col-md-6" >
           <p>Supervisor: <strong><?php echo $valedata[0]['supervisor']; ?></strong></p>
           <p><strong><?php echo $valedata[0]['descripcion']; ?></strong></p>
-          <p>Tarimas: <strong><?php echo $Tarimas; ?></strong></p>
+          <p>Nº Tarima: <strong><?php echo $Tarimas; ?></strong></p>
         </div>
         <div class="col-md-3" >
           <p>Turno: <strong><?php echo $valedata[0]['turno']; ?></strong></p>

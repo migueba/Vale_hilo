@@ -27,7 +27,7 @@
 
 <body>
     <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light bg-primary">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light bg-primary" style ="margin-bottom: 30px;">
         <img style="height: 50px; width: 110px; display: block; margin-right:30px;" src="images/FABRICA MARÍA SIN FONDO_negro_corta.png" />
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,10 +36,10 @@
 
         <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item active bg-light">
               <a class="nav-link" href="index.php"><b>Crear Vale</b> <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item bg-light">
               <a class="nav-link" href="vales.php"><b>Vales</b></a>
             </li>
           </ul>

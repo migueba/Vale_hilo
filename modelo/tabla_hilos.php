@@ -18,7 +18,8 @@
     IF(A.tarima<>0,\"TARIMA  \",IF(A.bolsa<>0,\"BOLSA  \",IF(A.caja<>0,\"CAJA  \",IF(A.palet<>0,\"PALET  \",\"N/D.  \")))) as presentacion,
   	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo, A.id_ent as id
   FROM entradash A
-    WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 )
+    LEFT JOIN vale_entrada B ON A.id_ent = B.id_entrada
+    WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 ) AND B.id_entrada is null
     ORDER BY A.clave, A.oriextra";
   }
 

@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light bg-primary">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light bg-primary" style ="margin-bottom: 30px;">
         <img style="height: 50px; width: 110px; display: block; margin-right:30px;" src="images/FABRICA MARÍA SIN FONDO_negro_corta.png" />
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
