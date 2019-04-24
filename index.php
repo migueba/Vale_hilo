@@ -131,6 +131,7 @@
               <div id="waiting" style="display: none;"> <img width="200" src="images/loading.gif" /><p>Cargando contenido</p></div>
               <div class="form-group" id="contenido_tabla" style="">
                 <table id="contenido" class="table table-sm"></table>
+                <span class="badge badge-info"> El Color Es de DEVOLUCION</span>
                 <span data-key="id_ent" class="badge badge-danger"></span>
               </div>
             </div>
@@ -181,18 +182,21 @@
 
                     $("#contenido").html('');
                     if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-                      $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">BOLSA</th><th scope=\"col\">CAJA</th><th scope=\"col\">PALET</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
+                      $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Fecha</th><th scope=\"col\">BOLSA</th><th scope=\"col\">CAJA</th><th scope=\"col\">PALET</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
                     }else{
-                      $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Entrada</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
+                      $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Fecha</th><th scope=\"col\">Lote</th><th scope=\"col\"></th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
                     }
                     // Vemos que la respuesta no este vacía y sea una arreglo
                     if(data != null && $.isArray(data)){
                       // Recorremos tu respuesta con each
                       var i = 0 ;
+
                       $.each(data, function(key, value){
-                      // Vamos agregando a nuestra tabla las filas necesarias
-                      $("#contenido").append("<tr><th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
-                        value.clave + "</td><td>" + value.entrada + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
+                        var $parts = (value.Fecha).split("-") ;
+                        // Vamos agregando a nuestra tabla las filas necesarias
+                        $("#contenido").append("<tr"+(value.entrada === "DEVOLUCION" ? ' class = \"bg-info\"': '')+">"+
+                        "<th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
+                        value.clave + "</td><td>" + $parts[2]+"/"+$parts[1]+"/"+$parts[0] + "</td><td>" + value.lote + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
                         value.pesoneto +"</td><td>"+ value.bobinas +"</td></tr>");
                         i++;
                       });

@@ -2,7 +2,7 @@
   include("bd.php") ;
 
   if($_POST['tipo'] === "COMPRADO"){
-    $consulta = "SELECT A.hilo as clave, \"NORMAL\" AS entrada,
+    $consulta = "SELECT A.hilo as clave, A.Fecha, \"NORMAL\" AS entrada,
       SUM(A.exisbolsa) as lote,
       SUM(A.exiscaja) as tarima,
       SUM(A.exispalet) as presentacion,
@@ -10,17 +10,19 @@
       SUM(A.exis_clleno+A.exis_bcono+A.exis_ccono+A.exis_cono) as bobinas ,
     	A.hilo as id
     FROM existencia A
-      WHERE A.hilo = ". $_POST['idhilo'] ." group by A.hilo ";
+      WHERE A.hilo = ". $_POST['idhilo'] ." GROUP BY A.hilo ";
   }else{
-  $consulta = "SELECT A.clave, IF(A.oriextra=0,\"NORMAL   \",\"DEVOLUCION\") AS entrada, A.lote,
+  $consulta = "SELECT A.clave,A.Fecha , A.lote,
     IF(A.tarima<>0,A.tarima,IF(A.bolsa<>0,A.bolsa,IF(A.caja<>0,A.caja,IF(A.palet<>0,A.palet,0)))) as tarima,
     A.pesoneto, (A.bobinas+A.Cbobina+A.Pbobina) as bobinas ,
     IF(A.tarima<>0,\"TARIMA  \",IF(A.bolsa<>0,\"BOLSA  \",IF(A.caja<>0,\"CAJA  \",IF(A.palet<>0,\"PALET  \",\"N/D.  \")))) as presentacion,
-  	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo, A.id_ent as id
+  	IF(A.tipo=1,\"BOBINA LLENA  \",\"BOBINA GALLO  \") AS tipo,
+    IF(A.oriextra=0,\"NORMAL   \",\"DEVOLUCION\") as entrada,
+    A.id_ent as id
   FROM entradash A
     LEFT JOIN vale_entrada B ON A.id_ent = B.id_entrada
     WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 ) AND B.id_entrada is null
-    ORDER BY A.clave, A.oriextra";
+    ORDER BY A.fecha,A.tarima ASC";
   }
 
   if ($resultado = $mysqli->query($consulta)) {
