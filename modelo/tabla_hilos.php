@@ -9,8 +9,9 @@
       SUM(A.exis_bllena) as pesoneto,
       SUM(A.exis_clleno+A.exis_bcono+A.exis_ccono+A.exis_cono) as bobinas ,
     	A.hilo as id
-    FROM existencia A
-      WHERE A.hilo = ". $_POST['idhilo'] ." GROUP BY A.hilo ";
+    FROM entradash A
+      LEFT JOIN vale_entrada B ON A.id_ent = B.id_entrada
+      WHERE A.hilo = ". $_POST['idhilo'] ."  GROUP BY A.hilo ";
   }else{
   $consulta = "SELECT A.clave,A.Fecha , A.lote,
     IF(A.tarima<>0,A.tarima,IF(A.bolsa<>0,A.bolsa,IF(A.caja<>0,A.caja,IF(A.palet<>0,A.palet,0)))) as tarima,
@@ -21,7 +22,8 @@
     A.id_ent as id
   FROM entradash A
     LEFT JOIN vale_entrada B ON A.id_ent = B.id_entrada
-    WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 ) AND B.id_entrada is null
+    LEFT JOIN vale_hilo C ON B.idvale = C.idvale_hilo AND C.estado <> 0
+    WHERE A.clave = ". $_POST['idhilo'] ." AND A.estatus = ( 1 ) AND IFNULL(C.estado,0) = 0
     ORDER BY A.fecha,A.tarima ASC";
   }
 

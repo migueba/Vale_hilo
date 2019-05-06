@@ -42,6 +42,9 @@
             <li class="nav-item bg-light">
               <a class="nav-link" href="vales.php"><b>Vales</b></a>
             </li>
+            <li class="nav-item bg-light">
+              <a class="nav-link" href="usuarios.php"><b>Usuarios</b></a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -131,7 +134,7 @@
               <div id="waiting" style="display: none;"> <img width="200" src="images/loading.gif" /><p>Cargando contenido</p></div>
               <div class="form-group" id="contenido_tabla" style="">
                 <table id="contenido" class="table table-sm"></table>
-                <span class="badge badge-info"> El Color Es de DEVOLUCION</span>
+                <span class="badge badge-info">Es DEVOLUCION</span>
                 <span data-key="id_ent" class="badge badge-danger"></span>
               </div>
             </div>

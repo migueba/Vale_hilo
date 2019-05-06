@@ -30,10 +30,10 @@
 
         <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link" href="index.php"><b>Crear Vale </b><span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="vales.php"><b>Vales</b></a>
             </li>
             <li class="nav-item bg-light">
@@ -43,7 +43,7 @@
         </div>
       </nav>
 
-        <h2 class="page-header">Vales de Hilo Registrados</h2>
+        <h2 class="page-header">Supervisores y/o Usuarios</h2>
           <div class="row">
             <div class="col-lg-12" >
               <div id="waiting" style="display: none;"> <img width="200" src="images/loading.gif" /><p>Cargando contenido</p></div>
@@ -66,7 +66,7 @@
             dataType: "json",
           success: function(data){
             $("#contenido").html('');
-            $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">ID VALE</th><th scope=\"col\">Hilo</th><th scope=\"col\">Fecha</th><th scope=\"col\">Turno</th><th scope=\"col\">Superv.</th><th scope=\"col\">Bobinas</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Estado</th><th scope=\"col\"></th><th scope=\"col\"></th></th><th scope=\"col\"></th></tr></thead> <tbody>");
+            $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">ID VALE</th><th scope=\"col\">Hilo</th><th scope=\"col\">Fecha</th><th scope=\"col\">Turno</th><th scope=\"col\">Superv.</th><th scope=\"col\">Bobinas</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Estado</th><th scope=\"col\"></th><th scope=\"col\"></th></tr></thead> <tbody>");
             // Vemos que la respuesta no este vacía y sea una arreglo
             if(data != null && $.isArray(data)){
               // Recorremos tu respuesta con each
@@ -79,7 +79,6 @@
                 "<td>"+value.Bobinas+"</td><td>" + value.Kilos + "</td><td>" + value.estado + "</td>" +
                 "<td><img id-vale=\""+value.id+"\" class=\"clickojo\" src=\"images/ojo.png\" /></td>"+
                 "<td><img class=\"clickcarta\" src=\"images/escritura.png\"/></td>"+
-                "<td><img class=\"clickcancel\" src=\"images/cancelar.png\"/></td>"+
                 "</tr>");
                 i++;
               });
