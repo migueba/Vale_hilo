@@ -1,5 +1,4 @@
 <?php
-  //require '../vendor/autoload.php' ;
   require 'vendor/autoload.php' ;
 
   use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -50,5 +49,6 @@
     asort($TelasArray);
   }
   $_SESSION["telas"] = $TelasArray;
+  var_dump ($TelasArray);
   //echo json_encode($TelasArray,JSON_UNESCAPED_UNICODE) ;
 ?>
