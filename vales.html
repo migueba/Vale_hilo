@@ -166,104 +166,31 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Lista de Vales Registrados</h6>
+          </div>
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Crear Vale</h1>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Vale</th>
+                      <th>Hilo</th>
+                      <th>Fecha</th>
+                      <th>Turno</th>
+                      <th>Supervisor</th>
+                      <th>Conos</th>
+                      <th>Kilos</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
           </div>
 
-          <form method="POST" id="formulario" action="#">
-
-            <div class="row">
-              <div class="col-xl-1 col-lg-1 col-md-6 col-sm-6">
-                <div class="form-group">
-                    <label>Turno</label>
-                    <select class="form-control" id="turno" name="turno" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <span data-key="turno" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                <div class="form-group">
-                    <label>Fecha</label>
-                    <input type="date" id="fecha" class="form-control" name="fecha" required/>
-                    <span data-key="fecha" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2">
-                <div class="form-group">
-                    <label>ID</label>
-                    <input type="text" id="idsupervisor" class="form-control" name="idsupervisor" required/>
-                    <span data-key="idsupervisor" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-7 col-lg-7 col-md-10 col-sm-10">
-                <div class="form-group">
-                    <label>Supervisor</label>
-                    <input type="text" id="supervisor" name="supervisor" class="form-control" />
-                    <span data-key="supervisor" class="badge badge-danger"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2">
-                <div class="form-group ui-widget">
-                  <label>Clave</label>
-                  <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" required/>
-                  <span data-key="clave_hilo" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-4 col-lg-4 col-md-10 col-sm-10">
-                <div class="form-group">
-                  <label>Hilo</label>
-                  <input type="text" id="hilos" name="hilos" class="form-control auto-widget" required/>
-                  <span data-key="hilos" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
-                <div class="form-group">
-                  <label>Tipo</label>
-                  <input type="text" id="tipo" name="tipo" class="form-control auto-widget" required readonly/>
-                  <span data-key="tipo" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
-                <div class="form-group">
-                  <label>Generico</label>
-                  <input type="text" id="generico" name="generico" class="form-control auto-widget" required readonly/>
-                  <span data-key="generico" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
-                <div class="form-group" id="totales">
-                </div>
-              </div>
-            </div>
-
-            <div class="row no-gutters" >
-              <div class="col-lg-6 col-lg-6 col-md-12 col-sm-12">
-                <div id="waiting" style="display: none; text-align: center;"> <img width="auto" src="images/loading.gif" /><p>Cargando contenido</p></div>
-                <div class="form-group" id="contenido_tabla" style="">
-                  <table id="contenido" class="table table-sm"></table>
-                </div>
-                <span id="msn-devolucion" class="badge badge-info"></span>
-                <span data-key="id_ent" class="badge badge-danger"></span>
-              </div>
-              <div class="col-lg-6 col-lg-6 col-md-12 col-sm-12">
-                <div id="detalle" class="form-group" style="max-height: 350px;overflow-y: scroll;">
-                </div>
-                <span data-key="detalle" class="badge badge-danger"></span>
-              </div>
-            </div>
-
-            <div class="btn-group">
-                <button type="submit" id="guardavale" class="btn btn-primary" disabled>Guardar</button>
-            </div>
-          </form>
         </div>
         <!-- End of Main Content -->
 
@@ -311,13 +238,10 @@
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="js/jquery-ui.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
-  <script src="js/crear_vale/javascrtip.js"></script>
 </body>
 
 </html>
