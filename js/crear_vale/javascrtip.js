@@ -33,12 +33,16 @@ $( function() {
               $("#contenido").html('');
               if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
                 $("#divcontenido").removeClass();
-                $("#divcontenido").addClass("col-lg-12 col-lg-12 col-md-12 col-sm-12");
+                $("#divdetalle").removeClass();
+                $("#divcontenido").addClass("col-lg-8 col-lg-8 col-md-8 col-sm-8");
+                $("#divdetalle").addClass("col-lg-4 col-lg-4 col-md-4 col-sm-4");
 
                 $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Fecha</th><th scope=\"col\"></th><th scope=\"col\">Numero</th><th scope=\"col\">Presentacion</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
               }else{
                 $("#divcontenido").removeClass();
+                $("#divdetalle").removeClass();
                 $("#divcontenido").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
+                $("#divdetalle").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
 
                 $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Fecha</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
               }
