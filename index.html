@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
   session_start();
-  $_SESSION = array();
+  //$_SESSION = array();
   if(!isset($_SESSION["telas"])){
     include("modelo/inf_tela.php") ;
   }
@@ -59,25 +59,25 @@
         Menu
       </div>
 
-      <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link" href="crear_vale.html">
           <i class="fas fa-fw fa-cog"></i>
           <span>Generar Vale</span></a>
       </li>
-
-      <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link" href="tables.html">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Reportes</span></a>
       </li>
-
-      <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link" href="vales.html">
           <i class="fas fa-fw fa-book"></i>
           <span>Vales</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="inventario.html">
+          <i class="fas fa-fw fa-book"></i>
+          <span>Inventario de Hilo</span></a>
       </li>
 
       <!-- Divider -->
@@ -165,16 +165,8 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-          </div>
-
           <!-- Content Row -->
           <div class="row">
-
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
@@ -431,7 +423,7 @@
 
       <!-- Footer -->
       <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
+        <div class="container my-auto fixed-bottom">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; Fabrica Maria 2019</span>
           </div>
@@ -475,17 +467,14 @@
 
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="vendor/Numeral-js/numeral.js"></script>
 
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 
+
   <!-- Page level plugins -->
   <script src="vendor/chart.js/Chart.min.js"></script>
-
-
-  <!-- Page level custom scripts
-  <script src="js/demo/chart-area-demo.js"></script>-->
-  <!--      -->
   <script src="js/canvas/grafica_index.js"></script>
 
   <script src="js/demo/chart-pie-demo.js"></script>

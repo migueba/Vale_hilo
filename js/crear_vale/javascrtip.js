@@ -32,8 +32,14 @@ $( function() {
 
               $("#contenido").html('');
               if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+                $("#divcontenido").removeClass();
+                $("#divcontenido").addClass("col-lg-12 col-lg-12 col-md-12 col-sm-12");
+
                 $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Fecha</th><th scope=\"col\"></th><th scope=\"col\">Numero</th><th scope=\"col\">Presentacion</th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
               }else{
+                $("#divcontenido").removeClass();
+                $("#divcontenido").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
+
                 $("#contenido").append("<thead class=\"thead-light\"><tr><th scope=\"col\">Sel.</th><th scope=\"col\">Clave</th><th scope=\"col\">Fecha</th><th scope=\"col\">Lote</th><th scope=\"col\">Tarima</th><th scope=\"col\"></th><th scope=\"col\">Peso Neto</th><th scope=\"col\">Conos</th></tr></thead> <tbody>");
               }
               // Vemos que la respuesta no este vacía y sea una arreglo
@@ -44,10 +50,17 @@ $( function() {
                 $.each(data, function(key, value){
                   var $parts = (value.Fecha).split("-") ;
                   // Vamos agregando a nuestra tabla las filas necesarias
-                  $("#contenido").append("<tr"+(value.entrada === "DEVOLUCION" ? ' class = \"bg-info text-dark\"': '')+">"+
-                  "<th scope=\"row\" class=\"text-center\"><input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th><td>" +
-                  value.clave + "</td><td>" + $parts[2]+"/"+$parts[1]+"/"+$parts[0] + "</td><td>" + (value.lote === "0" ? '' : value.lote) + "</td><td>" + value.tarima + "</td><td>"+value.presentacion+"</td><td>"+
-                  value.pesoneto +"</td><td>"+ value.bobinas +"</td></tr>");
+                  $("#contenido").append("<tr"+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+">"+
+                    "<th scope=\"row\" class=\"text-center\">"+
+                    "<input data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck \" name=\"id_ent["+i+"]\"> </th>"+
+                    "<td>"+value.clave + "</td>"+
+                    "<td>"+$parts[2]+"/"+$parts[1]+"/"+$parts[0]+"</td>"+
+                    "<td>"+(value.lote === "0" ? '' : value.lote)+"</td>"+
+                    "<td>"+value.tarima + "</td>"+
+                    "<td>"+value.presentacion+"</td>"+
+                    "<td>"+value.pesoneto+"</td>"+
+                    "<td>"+ value.bobinas +"</td>"+
+                  "</tr>");
                   i++;
                 });
                 $("#contenido").append("</tbody>") ;
@@ -57,8 +70,8 @@ $( function() {
               $( "#waiting" ).hide( "slow" );
             },
             error: function(r) {
-              alert("Ocurrio un Incoveniente con la BD");
-              $( "#waiting" ).hide( "slow" );
+              alert("No se puedo establecer Conexión a la Base de Datos");
+              $("#waiting").hide("slow");
             },
           });
         },
@@ -233,7 +246,7 @@ $( function() {
 
             $('input[name="detalle\['+key+'\]\[kgs\]"]').val( ((parseInt($('input[name="detalle\['+key+'\]\[bobinas\]"]').val())*$kgs_sel)/$bobi_sel).toFixed(2) ) ;
             $('#guardavale').prop('disabled', false);
-            
+
             alert("No se puede Exceder de mas de "+$bobi_sel+" Bobinas");
 
             $haybobinas_vacias = key ;

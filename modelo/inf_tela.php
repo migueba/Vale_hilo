@@ -49,6 +49,5 @@
     asort($TelasArray);
   }
   $_SESSION["telas"] = $TelasArray;
-  var_dump ($TelasArray);
   //echo json_encode($TelasArray,JSON_UNESCAPED_UNICODE) ;
 ?>

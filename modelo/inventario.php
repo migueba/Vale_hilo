@@ -44,7 +44,7 @@
         LEFT JOIN SALIDASH_DETALLE B ON A.identradash = B.id_entrada
          INNER JOIN articulo C ON A.hilo = C.hilo
        WHERE a.eSTATUS <> 0 GROUP BY A.identradash ORDER BY A.hilo) as s
-    where s.pesoneto_cal <> 0 group by s.hilo order by s.descripcion limit 6";
+    where s.pesoneto_cal <> 0 group by s.hilo order by s.descripcion";
 
     if($resultado = $mysqli->query($consulta)) {
       $rawdata = array();
