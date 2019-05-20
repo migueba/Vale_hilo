@@ -1,44 +1,43 @@
 $( function() {
   // Busca el Nombre del Hilo usando su Clave
   $(".form-group").on('change', '#clave_hilo', function(event){
-    //if (event.which == 13 ) {
-      event.preventDefault();
-      $('span[data-key=clave_hilo]').html('');
-      $("#msn-devolucion").html('');
+    event.preventDefault();
+    $('span[data-key=clave_hilo]').html('');
+    $("#msn-devolucion").html('');
+    $("#contenido").html('');
+    $( "#waiting" ).show( "slow" );
+    $('#guardavale').prop('disabled', true);
+    var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
 
-      $("#contenido").html('');
-      $( "#waiting" ).show( "slow" );
-      $('#guardavale').prop('disabled', true);
-      var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
+    $.ajax({
+      url: "modelo/hilo.php",
+      method: "GET",
+      data: { idhilo : idhilo_var , function : 'hilo_inf'},
+      dataType: "json",
+      success: function(data){
+        $('input[id=hilos]').val(data.descripcion) ;
+        $('input[id=tipo]').val(data.prod) ;
+        $('input[id=generico]').val(data.generico) ;
 
-      $.ajax({
+        $.ajax({
           url: "modelo/hilo.php",
           method: "GET",
-          data: { idhilo : idhilo_var , function : 'hilo_inf'},
+          data: {idhilo : idhilo_var , function : 'hilo_entradas' },
           dataType: "json",
-        success: function(data){
-          $('input[id=hilos]').val(data.descripcion) ;
-          $('input[id=tipo]').val(data.prod) ;
-          $('input[id=generico]').val(data.generico) ;
+          success: function(data){
+            $("#detalle").html('') ;
+            $("#totales").html('') ;
+            $("#contenido").html('');
+            $('#guardavale').prop('disabled', true);
 
-          $.ajax({
-              url: "modelo/hilo.php",
-              method: "GET",
-              data: {idhilo : idhilo_var , function : 'hilo_entradas' },
-              dataType: "json",
-            success: function(data){
-              $("#detalle").html('') ;
-              $("#totales").html('') ;
-              $("#contenido").html('');
-              $('#guardavale').prop('disabled', true);
+            if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+              $("#divcontenido").removeClass();
+              $("#divdetalle").removeClass();
+              $("#divcontenido").addClass("col-lg-8 col-lg-8 col-md-12 col-sm-12");
+              $("#divdetalle").addClass("col-lg-4 col-lg-4 col-md-12 col-sm-12");
 
-              if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-                $("#divcontenido").removeClass();
-                $("#divdetalle").removeClass();
-                $("#divcontenido").addClass("col-lg-8 col-lg-8 col-md-12 col-sm-12");
-                $("#divdetalle").addClass("col-lg-4 col-lg-4 col-md-12 col-sm-12");
-
-                $("#contenido").append("<thead class=\"thead-light\"><tr>"+
+              $("#contenido").append("<thead class=\"thead-light\">"+
+                "<tr>"+
                   "<th scope=\"col\">Sel.</th>"+
                   "<th scope=\"col\">Fecha</th>"+
                   "<th scope=\"col\">#</th>"+
@@ -51,14 +50,17 @@ $( function() {
                   "<th scope=\"col\">Bobinas</th>"+
                   "<th scope=\"col\"></th>"+
                   "<th scope=\"col\">Kgs</th>"+
-                "</tr></thead> <tbody>");
-              }else{
-                $("#divcontenido").removeClass();
-                $("#divdetalle").removeClass();
-                $("#divcontenido").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
-                $("#divdetalle").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
+                "</tr>"+
+              "</thead> "+
+              "<tbody>");
+            }else{
+              $("#divcontenido").removeClass();
+              $("#divdetalle").removeClass();
+              $("#divcontenido").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
+              $("#divdetalle").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
 
-                $("#contenido").append("<thead class=\"thead-light\"><tr>"+
+              $("#contenido").append("<thead class=\"thead-light\">"+
+                "<tr>"+
                   "<th scope=\"col\">Sel.</th>"+
                   "<th scope=\"col\">Fecha</th>"+
                   "<th scope=\"col\">Lote</th>"+
@@ -66,78 +68,76 @@ $( function() {
                   "<th scope=\"col\"></th>"+
                   "<th scope=\"col\">Peso Neto</th>"+
                   "<th scope=\"col\">Conos</th>"+
-                "</tr></thead> <tbody>");
-              }
-              // Vemos que la respuesta no este vacía y sea una arreglo
-              if(data != null && $.isArray(data)){
-                // Recorremos tu respuesta con each
-                var i = 0 ;
+                "</tr>"+
+              "</thead> "+
+              "<tbody>");
+            }
+            // Vemos que la respuesta no este vacía y sea una arreglo
+            if(data != null && $.isArray(data)){
+              var i = 0 ;
+              $.each(data, function(key, value){
+                var parts = (value.Fecha).split("-") ;
+                // Vamos agregando a nuestra tabla las filas necesarias
+                if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+                  $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
+                    "<th scope=\"row\" class=\"text-center\">"+
+                      "<input  data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"]\"> "+
+                    "</th>"+
+                    "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
+                    "<td class=\"text-right font-weight-bold\">"+value.tarima + "</td>"+
+                    "<td>"+value.presentacion+"</td>"+
+                    "<td class=\"font-weight-bold\">"+value.pesoneto+"</td>"+
+                    "<td class=\"text-center\">"+ value.bobinas +"</td>"+
+                    "<td></td>"+
+                    "<td><input type=\"text\" data-P=\""+i+"\" data-maximo=\""+value.tarima+"\" name=\"detallecomprado["+i+"][cantidadP]\" class=\"form-control \" readonly /></td>"+
+                    "<td class=\"text-left\">"+value.presentacion+"</td>"+
+                    "<td><input type=\"text\" data-B=\""+i+"\" data-bobinas=\""+value.bobinas+"\" data-kilos=\""+value.pesoneto+"\" value=\"0\" name=\"detallecomprado["+i+"][cantidadB]\" class=\"form-control\" readonly /></td>"+
+                    "<td class=\"text-left\">Bobinas</td>"+
+                    "<td><input type=\"text\" data-K=\""+i+"\" name=\"detallecomprado["+i+"][cantidadK]\" value=\"0\" class=\"form-control\" readonly /></td>"+
+                  "</tr>");
+                }else{
+                  $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
+                    "<th scope=\"row\" class=\"text-center\">"+
+                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"]\"> "+
+                    "</th>"+
+                    "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
+                    "<td>"+(value.lote === "0" ? '' : value.lote)+"</td>"+
+                    "<td>"+value.tarima + "</td>"+
+                    "<td>"+value.presentacion+"</td>"+
+                    "<td>"+value.pesoneto+"</td>"+
+                    "<td>"+ value.bobinas +"</td>"+
+                  " </tr>");
+                }
+                i++;
+              });
 
-                $.each(data, function(key, value){
-                  var $parts = (value.Fecha).split("-") ;
-                  // Vamos agregando a nuestra tabla las filas necesarias
-                  if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-                    $("#contenido").append("<tr"+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+">"+
-                      "<th scope=\"row\" class=\"text-center\">"+
-                      "<input  data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"]\"> </th>"+
-                      "<td>"+$parts[2]+"/"+$parts[1]+"/"+$parts[0]+"</td>"+
-                      "<td class=\"text-right font-weight-bold\">"+value.tarima + "</td>"+
-                      "<td>"+value.presentacion+"</td>"+
-                      "<td class=\"font-weight-bold\">"+value.pesoneto+"</td>"+
-                      "<td class=\"text-center\">"+ value.bobinas +"</td>"+
-                      "<td></td>"+
-                      "<td><input type=\"text\" data-P=\""+i+"\" data-maximo=\""+value.tarima+"\" name=\"detallecomprado["+i+"][cantidadP]\" class=\"form-control \" readonly /></td>"+
-                      "<td class=\"text-left\">"+value.presentacion+"</td>"+
-                      "<td><input type=\"text\" data-B=\""+i+"\" data-bobinas=\""+value.bobinas+"\" data-kilos=\""+value.pesoneto+"\" value=\"0\" name=\"detallecomprado["+i+"][cantidadB]\" class=\"form-control\" readonly /></td>"+
-                      "<td class=\"text-left\">Bobinas</td>"+
-                      "<td><input type=\"text\" data-K=\""+i+"\" name=\"detallecomprado["+i+"][cantidadK]\" value=\"0\" class=\"form-control\" readonly /></td>"+
-                    "</tr>");
-                  }else{
-                    $("#contenido").append("<tr"+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+">"+
-                      "<th scope=\"row\" class=\"text-center\">"+
-                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"]\"> </th>"+
-                      "<td>"+$parts[2]+"/"+$parts[1]+"/"+$parts[0]+"</td>"+
-                      "<td>"+(value.lote === "0" ? '' : value.lote)+"</td>"+
-                      "<td>"+value.tarima + "</td>"+
-                      "<td>"+value.presentacion+"</td>"+
-                      "<td>"+value.pesoneto+"</td>"+
-                      "<td>"+ value.bobinas +"</td>"+
-                    "</tr>");
-                  }
-                  i++;
-                });
-                $("#contenido").append("</tbody>") ;
-                $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
-                $("#msn-devolucion").append("INDICA QUE ES DEVOLUCION") ;
-              }
-              $( "#waiting" ).hide( "slow" );
-            },
-            error: function(r) {
-              alert("No se puedo establecer Conexión a la Base de Datos");
-              $("#waiting").hide("slow");
-            },
-          });
-        },
-        error: function(r) {
-          $('#clave_hilo').val('');
-          $('span[data-key=clave_hilo]').append("No Existe la Clave de Hilo");
-
-          $('input[id=hilos]').val("") ;
-          $('input[id=tipo]').val("") ;
-          $('input[id=generico]').val("") ;
-
-          $("#contenido").html('');
-          $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
-          $( "#waiting" ).hide( "slow" );
-        },
-      });
-
-  //  }
-  });
+              $("#contenido").append("</tbody>") ;
+              $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
+              $("#msn-devolucion").append("INDICA QUE ES DEVOLUCION") ;
+            }
+            $( "#waiting" ).hide( "slow" );
+          },
+          error: function(r) {
+            alert("No se puedo establecer Conexión a la Base de Datos");
+            $("#waiting").hide("slow");
+          },
+        });
+      },
+      error: function(r) {
+        $('#clave_hilo').val('');
+        $('span[data-key=clave_hilo]').append("No Existe la Clave de Hilo");
+        $('input[id=hilos]').val("") ;
+        $('input[id=tipo]').val("") ;
+        $('input[id=generico]').val("") ;
+        $("#contenido").html('');
+        $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
+        $( "#waiting" ).hide( "slow" );
+      },
+    });
+});
 
   //script cuando le da click a un chebock
   $("#contenido").on('click', '.mycheck', function(data) {
-
       var $contador = 0 ;
       var $totalpeso = 0 ;
       var $totalbobinas = 0 ;
@@ -291,20 +291,35 @@ $( function() {
     $('input[id=pesototal]').val($totalpeso.toFixed(2)) ;
     $('input[id=bobinatotal]').val($totalbobinas) ;
 
+    $(':text[ name^="detalle[0][bobinas]" ]').val($totalbobinas);
+    $(':text[ name^="detalle[0][kgs]" ]').val($totalpeso.toFixed(2)) ;
+
   });
 
   //Funcion para validar que el el detallado de bobinas se cambio en Hilo PRODUCIDO
   $("#contenido").on('change', ':text[name^="detallecomprado["][name$="][cantidadP]"]', function(data) {
     var $presenta_sel  = parseInt($(this).val()) ;
+    var $bobinas_max = parseInt($(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').attr('data-bobinas')) ;
+    var $presenta_max = parseInt($(this).attr('data-maximo')) ;
+    var $error = 0 ;
 
     if ( $presenta_sel > $(this).attr('data-maximo') ){
       alert('No Puede poner una Cantidad de Presentacion Mayor a la que Existe, Se pondra la Cantidad Maxima que se puede poner');
       $(this).val($(this).attr('data-maximo'));
+      $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').val($bobinas_max);
+      $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').trigger("change");
+      $error = 1 ;
     }
 
     if ( $presenta_sel < 0 ){
       alert('No puede Poner un Valor menor a 0, Por defecto se pondra 0');
       $(this).val(0);
+      $error = 1 ;
+    }
+
+    if ($error === 0){
+      $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').val(($presenta_sel*$bobinas_max)/$presenta_max);
+      $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').trigger("change");
     }
 
   });
@@ -411,6 +426,41 @@ $( function() {
     $('input[name="detalle\['+$posicion_+'\]\[tela\]"]').attr("list", "telasdestino"+$posicion_);
   });
 
+  // Complementos del AutoComplete
+  $(".form-group").on('change', '#idsupervisor', function(event){
+    var idemp_ = $(this).val() ;
+    $.ajax({
+        url: "modelo/usuarios.php",
+        dataType: "json",
+        data: { idemp : idemp_ , function : 'busca_id'},
+        success: function(data){
+          $('input[id=supervisor]').val(data.nombre) ;
+        }
+    });
+  });
+
+  // AutoComplete en la lista de Usuarios
+  $("#supervisor").autocomplete({
+    source: function( request, response ) {
+      $.ajax( {
+        url: "modelo/usuarios.php",
+        dataType: "json",
+        data: {
+          term: request.term ,
+          function : 'lista_usuarios'
+        },
+        success: function( data ) {
+          response( data );
+        }
+      } );
+    },
+    minLength: 1,
+    autoFocus: true,
+    select: function( event, ui ) {
+      $("#idsupervisor").val(ui.item.value);
+      $("#idsupervisor").trigger("change");
+    }
+  });
 
   // AutoComplete en la lista de telas
   $("#hilos").autocomplete({
@@ -433,13 +483,8 @@ $( function() {
       $("#clave_hilo").val(ui.item.value);
       $("#clave_hilo").trigger("change");
       //console.log( "Selected: " + ui.item.value + " aka " + ui.item.label );
-    },
-    change: function (event, ui) {
-      if (ui.item === null) {
-        $(this).val('');
-      }
     }
-  } );
+  });
 
   /////// Cuando preciona el Boton de Guardar al Formulario
   var form = $("#formulario");
@@ -448,7 +493,7 @@ $( function() {
       form.find('.badge-danger').text('');
       $.ajax({
           url: "modelo/guardar_vale.php",
-          method: "POST",
+          method: "GET",
           data: form.serialize(),
           dataType: "json",
           success: function(r){
