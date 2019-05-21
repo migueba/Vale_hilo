@@ -34,7 +34,7 @@ function hilo_entradas() {
 
   $consulta = "SELECT A.hilo as clave,A.Fecha , A.lote,
     (A.numero-SUM(IFNULL(D.numero,0))) as tarima, E.descripcion as presentacion,
-    ROUND((A.pesoneto-SUM(IFNULL(D.peso,0))),1) AS pesoneto, (A.bobinas-SUM(IFNULL(D.bobinas,0))) as bobinas ,
+    ROUND((A.pesoneto-SUM(IFNULL(D.peso,0))),4) AS pesoneto, (A.bobinas-SUM(IFNULL(D.bobinas,0))) as bobinas ,
     IF(A.origen=1,\"NORMAL   \",\"DEVOLUCION\") as entrada,
     A.id_ent as id
   FROM entradash A

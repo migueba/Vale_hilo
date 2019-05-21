@@ -1,6 +1,6 @@
 $( function() {
   // Busca el Nombre del Hilo usando su Clave
-  $(".form-group").on('change', '#clave_hilo', function(event){
+  $(".form-group").on('focusout', '#clave_hilo', function(event){
     event.preventDefault();
     $('span[data-key=clave_hilo]').html('');
     $("#msn-devolucion").html('');
@@ -42,7 +42,7 @@ $( function() {
                   "<th scope=\"col\">Fecha</th>"+
                   "<th scope=\"col\">#</th>"+
                   "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Peso Neto</th>"+
+                  "<th scope=\"col\">Kg. Neto</th>"+
                   "<th scope=\"col\">Conos</th>"+
                   "<th scope=\"col\"></th>"+
                   "<th scope=\"col\">Cantidad</th>"+
@@ -66,7 +66,7 @@ $( function() {
                   "<th scope=\"col\">Lote</th>"+
                   "<th scope=\"col\">Tarima</th>"+
                   "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Peso Neto</th>"+
+                  "<th scope=\"col\">Kg. Neto</th>"+
                   "<th scope=\"col\">Conos</th>"+
                 "</tr>"+
               "</thead> "+
@@ -178,11 +178,9 @@ $( function() {
           $("#totales").html('') ;
 
         }else if( !$('input[id=pesototal]').length ){
-          $('#guardavale').prop('disabled', false);
+          $('#guardavale').prop('disabled', true);
           menu_destino($totalpeso.toFixed(2), $totalbobinas, $.trim($('input[id=tipo]').val())) ;
-          $('input[name="detalle\[0\]\[cantidad\]"]').val($contador);
         }
-
       }else{
         if ($contador === 0){
           $('#guardavale').prop('disabled', true);
@@ -192,13 +190,10 @@ $( function() {
         }else if( !$("#existe_detalle0").length ) {
           $('#guardavale').prop('disabled', false);
           menu_destino($totalpeso.toFixed(2), $totalbobinas, $.trim($('input[id=tipo]').val())) ;
-          $('input[name="detalle\[0\]\[cantidad\]"]').val($contador);
-
         }else {
            $('input[id=pesototal]').val($totalpeso.toFixed(2)) ;
            $('input[id=bobinatotal]').val($totalbobinas) ;
 
-           $('input[name="detalle\[0\]\[cantidad\]"]').val($contador);
            $('input[name="detalle\[0\]\[bobinas\]"]').val($totalbobinas);
            $('input[name="detalle\[0\]\[bobinas\]"]').trigger("change");
         }
@@ -294,6 +289,7 @@ $( function() {
     $(':text[ name^="detalle[0][bobinas]" ]').val($totalbobinas);
     $(':text[ name^="detalle[0][kgs]" ]').val($totalpeso.toFixed(2)) ;
 
+    $(':text[ name="detalle[0][bobinas]" ]').trigger("change");
   });
 
   //Funcion para validar que el el detallado de bobinas se cambio en Hilo PRODUCIDO
@@ -427,7 +423,7 @@ $( function() {
   });
 
   // Complementos del AutoComplete
-  $(".form-group").on('change', '#idsupervisor', function(event){
+  $(".form-group").on('focusout', '#idsupervisor', function(event){
     var idemp_ = $(this).val() ;
     $.ajax({
         url: "modelo/usuarios.php",
@@ -458,7 +454,7 @@ $( function() {
     autoFocus: true,
     select: function( event, ui ) {
       $("#idsupervisor").val(ui.item.value);
-      $("#idsupervisor").trigger("change");
+      $("#idsupervisor").trigger("focusout");
     }
   });
 
@@ -481,7 +477,7 @@ $( function() {
     autoFocus: true,
     select: function( event, ui ) {
       $("#clave_hilo").val(ui.item.value);
-      $("#clave_hilo").trigger("change");
+      $("#clave_hilo").trigger("focusout");
       //console.log( "Selected: " + ui.item.value + " aka " + ui.item.label );
     }
   });
