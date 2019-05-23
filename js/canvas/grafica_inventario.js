@@ -13,7 +13,7 @@ $.getJSON( "modelo/inventario.php?function=inventario_hilo",
        data: {
           labels: hilos ,
           datasets: [{
-             label: 'Inventario',
+             label: 'Inventario del Almacen de Hilo',
              data: peso ,
              backgroundColor: 'rgba(0, 119, 204, 0.3)',
              borderWidth: 1

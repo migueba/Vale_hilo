@@ -32,7 +32,8 @@ function hilo_inf() {
 function hilo_entradas() {
   include("bd.php") ;
 
-  $consulta = "SELECT A.hilo as clave,A.Fecha , A.lote,
+  $consulta = " SELECT * FROM
+  (SELECT A.hilo as clave,A.Fecha , A.lote,
     (A.numero-SUM(IFNULL(D.numero,0))) as tarima, E.descripcion as presentacion,
     ROUND((A.pesoneto-SUM(IFNULL(D.peso,0))),4) AS pesoneto, (A.bobinas-SUM(IFNULL(D.bobinas,0))) as bobinas ,
     IF(A.origen=1,\"NORMAL   \",\"DEVOLUCION\") as entrada,
@@ -42,9 +43,10 @@ function hilo_entradas() {
     LEFT JOIN vale_hilo C ON B.idvale = C.idvale_hilo AND C.estado <> 0
     LEFT JOIN salidash_detalle D ON A.identradash = D.id_entrada
     INNER JOIN presentacion E ON A.id_presenta = E.idpresentacion
-    WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus = ( 1 ) AND IFNULL(C.estado,0) = 0
+    WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus <> ( 0 ) AND IFNULL(C.estado,0) = 0
     GROUP BY A.identradash
-    ORDER BY A.fecha ASC";
+    ORDER BY A.fecha ASC) as S
+    WHERE S.pesoneto <> 0 ";
 
     if ($resultado = $mysqli->query($consulta)) {
       $rawdata = array();

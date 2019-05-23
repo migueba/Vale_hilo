@@ -1,4 +1,6 @@
 $( function() {
+  $('#sidebarToggle').click();
+
   // Busca el Nombre del Hilo usando su Clave
   $(".form-group").on('focusout', '#clave_hilo', function(event){
     event.preventDefault();
@@ -33,8 +35,8 @@ $( function() {
             if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
               $("#divcontenido").removeClass();
               $("#divdetalle").removeClass();
-              $("#divcontenido").addClass("col-lg-8 col-lg-8 col-md-12 col-sm-12");
-              $("#divdetalle").addClass("col-lg-4 col-lg-4 col-md-12 col-sm-12");
+              $("#divcontenido").addClass("col-xl-8 col-lg-12 col-md-12 col-sm-12");
+              $("#divdetalle").addClass("col-xl-4 col-lg-12 col-md-12 col-sm-12");
 
               $("#contenido").append("<thead class=\"thead-light\">"+
                 "<tr>"+
@@ -56,8 +58,8 @@ $( function() {
             }else{
               $("#divcontenido").removeClass();
               $("#divdetalle").removeClass();
-              $("#divcontenido").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
-              $("#divdetalle").addClass("col-lg-6 col-lg-6 col-md-12 col-sm-12");
+              $("#divcontenido").addClass("col-xl-6 col-lg-6 col-md-12 col-sm-12");
+              $("#divdetalle").addClass("col-xl-6 col-lg-6 col-md-12 col-sm-12");
 
               $("#contenido").append("<thead class=\"thead-light\">"+
                 "<tr>"+
@@ -81,7 +83,7 @@ $( function() {
                 if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
                   $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
                     "<th scope=\"row\" class=\"text-center\">"+
-                      "<input  data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"]\"> "+
+                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"detallecomprado["+i+"][id]\"> "+
                     "</th>"+
                     "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
                     "<td class=\"text-right font-weight-bold\">"+value.tarima + "</td>"+
@@ -89,16 +91,24 @@ $( function() {
                     "<td class=\"font-weight-bold\">"+value.pesoneto+"</td>"+
                     "<td class=\"text-center\">"+ value.bobinas +"</td>"+
                     "<td></td>"+
-                    "<td><input type=\"text\" data-P=\""+i+"\" data-maximo=\""+value.tarima+"\" name=\"detallecomprado["+i+"][cantidadP]\" class=\"form-control \" readonly /></td>"+
-                    "<td class=\"text-left\">"+value.presentacion+"</td>"+
-                    "<td><input type=\"text\" data-B=\""+i+"\" data-bobinas=\""+value.bobinas+"\" data-kilos=\""+value.pesoneto+"\" value=\"0\" name=\"detallecomprado["+i+"][cantidadB]\" class=\"form-control\" readonly /></td>"+
+                    "<td>"+
+                      "<input type=\"text\" data-P=\""+i+"\" data-maximo=\""+value.tarima+"\" id=\"CPresenta"+i+"\" class=\"form-control input-sm\" readonly />"+
+                    "</td>"+
+                    "<td class=\"text-left\">"+
+                      "<input type=\"text\" id=\"Presenta"+i+"\" class=\"form-control\" value=\""+value.presentacion+"\" readonly />"+
+                    "</td>"+
+                    "<td>"+
+                      "<input type=\"text\" data-B=\""+i+"\" data-bobinas=\""+value.bobinas+"\" data-kilos=\""+value.pesoneto+"\" value=\"0\" id=\"BPresenta"+i+"\" class=\"form-control\" readonly />"+
+                    "</td>"+
                     "<td class=\"text-left\">Bobinas</td>"+
-                    "<td><input type=\"text\" data-K=\""+i+"\" name=\"detallecomprado["+i+"][cantidadK]\" value=\"0\" class=\"form-control\" readonly /></td>"+
+                    "<td>"+
+                      "<input type=\"text\" data-K=\""+i+"\" id=\"KPresenta"+i+"\" value=\"0\" class=\"form-control\" readonly />"+
+                    "</td>"+
                   "</tr>");
                 }else{
                   $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
                     "<th scope=\"row\" class=\"text-center\">"+
-                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"]\"> "+
+                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"][id]\"> "+
                     "</th>"+
                     "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
                     "<td>"+(value.lote === "0" ? '' : value.lote)+"</td>"+
@@ -150,9 +160,12 @@ $( function() {
           $contador++;
 
           if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-            //$('input[data-P='+$(this).attr('data-i')+']').prop('required', true);
-            $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadP\]"]').prop('readOnly', false);
+            $('#Presenta'+$(this).attr('data-i')).attr("name","detallecomprado["+$(this).attr('data-i')+"][Presenta]") ;
+            $('#CPresenta'+$(this).attr('data-i')).attr("name","detallecomprado["+$(this).attr('data-i')+"][cantidadP]") ;
+            $('#BPresenta'+$(this).attr('data-i')).attr("name","detallecomprado["+$(this).attr('data-i')+"][cantidadB]") ;
+            $('#KPresenta'+$(this).attr('data-i')).attr("name","detallecomprado["+$(this).attr('data-i')+"][cantidadK]") ;
 
+            $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadP\]"]').prop('readOnly', false);
             $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadB\]"]').prop('required', true);
             $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadB\]"]').prop('readOnly', false);
 
@@ -168,6 +181,12 @@ $( function() {
           $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadB\]"]').val(0);
 
           $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadK\]"]').val(0);
+
+          $('#Presenta'+$(this).attr('data-i')).attr("name","") ;
+          $('#CPresenta'+$(this).attr('data-i')).attr("name","") ;
+          $('#BPresenta'+$(this).attr('data-i')).attr("name","") ;
+          $('#KPresenta'+$(this).attr('data-i')).attr("name","") ;
+
         }
       });
 
@@ -221,10 +240,10 @@ $( function() {
           "<label>Destino</label>"+
           "<select class=\"detalle-destino form-control\" data-id=\"0\" name=\"detalle[0][destino]\" required>"+
             "<option disabled selected value></option>"+
-            "<option value=\"1\">Urdido</option>"+
-            "<option value=\"2\">Tejido</option>"+
-            "<option value=\"3\">Maquila</option>"+
-            "<option value=\"4\">Torzal</option>"+
+            "<option value=\"2\">Urdido</option>"+
+            "<option value=\"3\">Tejido</option>"+
+            "<option value=\"5\">Maquila</option>"+
+            "<option value=\"7\">Torzal</option>"+
           "</select>"+
         "</div>"+
       "</div>"+
@@ -314,7 +333,11 @@ $( function() {
     }
 
     if ($error === 0){
-      $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').val(($presenta_sel*$bobinas_max)/$presenta_max);
+      if ($presenta_max != 0){
+        $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').val(($presenta_sel*$bobinas_max)/$presenta_max);
+      }else{
+        $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').val($bobinas_max);
+      }
       $(':text[ name^="detallecomprado['+$(this).attr('data-P')+'][cantidadB]" ]').trigger("change");
     }
 
@@ -384,10 +407,10 @@ $( function() {
             "<label>Destino</label>"+
             "<select class=\"detalle-destino form-control\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" id=\"destino_detalle\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][destino]\" required>"+
               "<option disabled selected value></option>"+
-              "<option value=\"1\">Urdido</option>"+
-              "<option value=\"2\">Tejido</option>"+
-              "<option value=\"3\">Maquila</option>"+
-              "<option value=\"4\">Torzal</option>"+
+              "<option value=\"2\">Urdido</option>"+
+              "<option value=\"3\">Tejido</option>"+
+              "<option value=\"5\">Maquila</option>"+
+              "<option value=\"7\">Torzal</option>"+
             "</select>"+
           "</div>"+
         "</div>"+
@@ -488,17 +511,17 @@ $( function() {
       event.preventDefault();
       form.find('.badge-danger').text('');
       $.ajax({
-          url: "modelo/guardar_vale.php",
+          url: "modelo/vale11.php",
           method: "GET",
-          data: form.serialize(),
+          data: form.serialize() + "&function=validar_vale",
           dataType: "json",
           success: function(r){
-            if(!r.response) {
-              for(var k in r.errors){
-                $("span[data-key='" + k + "']").text(r.errors[k]);
-              }
-            }
-            window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.php?id_vale='+r.errors['id_vale'], '_blank');
+            //if(!r.response) {
+            //  for(var k in r.errors){
+            //    $("span[data-key='" + k + "']").text(r.errors[k]);
+            //  }
+            //}else
+            window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
             location.reload();
           },
           error: function(xhr, textStatus, errorThrown){

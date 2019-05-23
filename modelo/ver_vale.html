@@ -1,0 +1,18 @@
+<?php
+  ob_start();
+  include('inf_vale.php');
+  $content_html = ob_get_clean();
+
+  echo $content_html ;
+
+  //require_once('../vendor/autoload.php');
+  //use Spipu\Html2Pdf\Html2Pdf;
+
+
+
+  //set_time_limit(2000);
+  //$html2pdf = new HTML2PDF('l','CARTA','es', false, 'ISO-8859-15', array(8, 8, 8, 8));
+  //$html2pdf = new HTML2PDF('P', 'lette', 'es', true, 'UTF-8');
+  //$html2pdf->writeHTML($content_html);
+  //$html2pdf->output();
+?>
