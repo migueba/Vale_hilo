@@ -46,7 +46,7 @@
       <hr class="sidebar-divider my-0">
 
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Inicio</span></a>
@@ -65,11 +65,16 @@
           <span>Generar Vale</span></a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="registra_urdido.html">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Registra Urdido</span></a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="tables.html">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Reportes</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="vales.html">
           <i class="fas fa-fw fa-book"></i>
           <span>Vales</span></a>
@@ -164,15 +169,10 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-          <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Lista de Vales Registrados</h6>
-          </div>
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered display" id="contenido" width="100%" cellspacing="0">
-                </table>
+              <table class="table table-bordered display" id="contenido" style="width:100%;" >
               </div>
             </div>
           </div>
@@ -180,19 +180,8 @@
         </div>
         <!-- End of Main Content -->
 
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Fabrica Maria 2019</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
-
   </div>
   <!-- End of Page Wrapper -->
 
@@ -220,15 +209,18 @@
     </div>
   </div>
 
-  <!-- Bootstrap core JavaScript-->
+
   <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="js/jquery-ui.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- Core plugin JavaScript-->
+
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <!-- Custom scripts for all pages-->
+
   <script src="js/sb-admin-2.min.js"></script>
 
+  <script src="js/jquery-ui.min.js"></script>
+
+  <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
   <script src="js/vales/javascrtip.js"></script>
 </body>
 

@@ -511,7 +511,7 @@ $( function() {
       event.preventDefault();
       form.find('.badge-danger').text('');
       $.ajax({
-          url: "modelo/vale11.php",
+          url: "modelo/vale.php",
           method: "GET",
           data: form.serialize() + "&function=validar_vale",
           dataType: "json",

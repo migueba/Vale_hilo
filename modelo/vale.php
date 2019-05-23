@@ -2,7 +2,7 @@
 function lista_vale() {
   include("bd.php") ;
 
-  $consulta = "SELECT A.idvale_hilo as vale, A.hilo, A.fecha, A.turno,
+  $consulta = "SELECT A.idvale_hilo as vale, A.hilo, D.descripcion as nombre, A.fecha, A.turno,
     concat(trim(C.nombre),\" \",trim(C.apaterno),\" \",trim(C.amaterno)) as supervisor,
     SUM(B.Bobinas) as bobinas,
     SUM(B.kilos) as kilos,
@@ -10,17 +10,23 @@ function lista_vale() {
   FROM vale_hilo A
     LEFT JOIN vale_hilo_detalle B ON A.idvale_hilo = B.idvale_hilo
     LEFT JOIN usuarios C ON A.supervisor = C.num_emp
+    LEFT JOIN articulo D ON A.hilo = D.hilo
     WHERE A.estado <> 0
   GROUP BY A.idvale_hilo  ";
 
   if ($resultado = $mysqli->query($consulta)) {
-    $rawdata = array(); //creamos un array
-    //guardamos en un array multidimensional todos los datos de la consulta
+    $rawdata = array();
+    //$rawdatapre = array();
+
     $i=0;
-    while($row = mysqli_fetch_array($resultado)){
-      $rawdata[$i] = $row;
+    while($rows = $resultado->fetch_array(MYSQLI_ASSOC)){
+      //$rawdatapre[$i] = $rows;
+      $rawdata[$i] = $rows;
       $i++;
     }
+
+    //$rawdata['data'] = $rawdatapre ;
+
     $resultado->close();
     $mysqli->close();
     header('Content-Type: application/json');
@@ -119,8 +125,18 @@ function guardar_vale() {
 }
 //    ****************    ----------------------------    ***************************   //
 
-function inf_vale() {
-
+function cancelar_vale() {
+  include("bd.php") ;
+  $consulta = "UPDATE vale_hilo SET estado = 0 WHERE idvale_hilo = ". $_GET['id_vale'];
+  if ($resultado = $mysqli->query($consulta)) {
+    $mysqli->close();
+    header('content-type text/plain');
+    echo "Se Cancelo el Vale";
+  }else{
+    $mysqli->close();
+    header('content-type text/plain');
+    echo "No se pudo Cancelar el Vale";
+  }
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])){
@@ -128,6 +144,7 @@ if(isset($_GET['function']) && !empty($_GET['function'])){
     switch($function) {
         case 'lista_vale' : lista_vale(); break;
         case 'validar_vale' : validar_vale(); break;
+        case 'cancelar_vale' : cancelar_vale(); break;
     }
 }
 ?>

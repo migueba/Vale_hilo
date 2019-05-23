@@ -65,8 +65,8 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Muestra la informacion del Vale">
+    <meta name="author" content="Julio Cesar Barradas">
 
     <title>Vale de Hilo N°<?php echo $_GET['id_vale']; ?></title>
 
