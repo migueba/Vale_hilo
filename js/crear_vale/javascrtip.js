@@ -524,10 +524,8 @@ $( function() {
             window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
             location.reload();
           },
-          error: function(xhr, textStatus, errorThrown){
-            alert(xhr.status);
-            console.log(textStatus);
-            console.log(errorThrown);
+          error: function(r){
+            alert("El error ya se esta corrigiendo "+typeof r);
           }
       });
       return false;

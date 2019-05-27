@@ -32,34 +32,38 @@ function hilo_inf() {
 function hilo_entradas() {
   include("bd.php") ;
 
-  $consulta = " SELECT * FROM
-  (SELECT A.hilo as clave,A.Fecha , A.lote,
-    (A.numero-SUM(IFNULL(D.numero,0))) as tarima, E.descripcion as presentacion,
-    ROUND((A.pesoneto-SUM(IFNULL(D.peso,0))),4) AS pesoneto, (A.bobinas-SUM(IFNULL(D.bobinas,0))) as bobinas ,
+  $consulta = "  SELECT * FROM
+    (SELECT A.hilo as clave,A.Fecha , A.lote,
+    (A.numero-(SUM(IFNULL(D.numero,0))+SUM(IFNULL(B.numero,0)))) as tarima, E.descripcion as presentacion,
+    ROUND((A.pesoneto-(SUM(IFNULL(D.peso,0))+SUM(IFNULL(B.peso,0)))),4) AS pesoneto, (A.bobinas-(SUM(IFNULL(D.bobinas,0))+SUM(IFNULL(B.bobinas,0)))) as bobinas ,
     IF(A.origen=1,\"NORMAL   \",\"DEVOLUCION\") as entrada,
-    A.id_ent as id
+    A.id_ent as id, B.numero as numerob, B.peso as pesob, B.bobinas as bobib
   FROM entradash A
-    LEFT JOIN vale_entrada B ON A.id_ent = B.id_entrada
-    LEFT JOIN vale_hilo C ON B.idvale = C.idvale_hilo AND C.estado <> 0
+    LEFT JOIN (
+  	   select sum(A.kilos) as peso, sum(A.Bobinas) as bobinas, sum(A.presenta_cant) as numero, A.id_entrada
+          from vale_entrada A
+          INNER JOIN vale_hilo B ON A.idvale = B.idvale_hilo WHERE B.hilo = ". $_GET['idhilo'] ." AND B.estado <> 0 group by A.id_entrada
+  	) B ON  A.identradash = B.id_entrada
     LEFT JOIN salidash_detalle D ON A.identradash = D.id_entrada
     INNER JOIN presentacion E ON A.id_presenta = E.idpresentacion
-    WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus <> ( 0 ) AND IFNULL(C.estado,0) = 0
+    WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus <> ( 0 )
     GROUP BY A.identradash
     ORDER BY A.fecha ASC) as S
-    WHERE S.pesoneto <> 0 ";
+  WHERE S.pesoneto <> 0";
 
-    if ($resultado = $mysqli->query($consulta)) {
-      $rawdata = array();
-      $i=0;
-      while($row = mysqli_fetch_array($resultado)){ $rawdata[$i] = $row;$i++;}
-      $resultado->close();
-      $mysqli->close();
-      header('Content-Type: application/json');
-      echo json_encode($rawdata,JSON_UNESCAPED_UNICODE);
-    }else{
-      $mysqli->close();
-      echo "Fallo la Conexion a la Base de Datos";
-    }
+  if ($resultado = $mysqli->query($consulta)) {
+    $rawdata = array();
+    $i=0;
+    while($row = mysqli_fetch_array($resultado)){ $rawdata[$i] = $row;$i++;}
+
+    $resultado->close();
+    $mysqli->close();
+    header('Content-Type: application/json');
+    echo json_encode($rawdata,JSON_UNESCAPED_UNICODE);
+  }else{
+    $mysqli->close();
+    echo "Fallo la Conexion a la Base de Datos";
+  }
 }
 
 function hilo_nombre() {
