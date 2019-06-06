@@ -10,6 +10,7 @@ $( function() {
       $("#contenido").html('');
       $("#contenido").append("<thead class=\"thead-light\">"+
         "<tr>"+
+          "<th scope=\"col\">Sel.</th>"+
           "<th scope=\"col\">VALE</th>"+
           "<th scope=\"col\">Hilo</th>"+
           "<th scope=\"col\"></th>"+
@@ -30,6 +31,9 @@ $( function() {
           // Vamos agregando a nuestra tabla las filas necesarias
           var $fechapre = (value.fecha).split('-');
           $("#contenido").append("<tr>"+
+              "<td>"+
+                "<input data-i=\""+i+"\" type=\"checkbox\" value="+value.vale+" class=\"mycheck form-control\" name=\"vale_sel["+i+"][id]\"> "+
+              "</td>"+
               "<td>"+value.vale+"</td>"+
               "<td>"+value.hilo+"</td>"+
               "<td>"+$.trim(value.nombre)+"</td>"+
