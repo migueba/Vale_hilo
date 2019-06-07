@@ -69,15 +69,19 @@ function validar_vale() {
       }
     }
 
-    if (count($_GET['detallecomprado']) === 0){
-        $validaciones['detallecomprado'] = 'debe Selecionar al Menos una Entrada' ;
+    if (isset($_GET['detallecomprado'])){
+      if (count($_GET['detallecomprado']) === 0 && trim ($_GET['tipo']) === "COMPRADO" ){
+          $validaciones['detallecomprado'] = 'debe Selecionar al Menos una Entrada' ;
+      }
     }
 
     if (count($validaciones) === 0){
       $validaciones['id_vale'] = guardar_vale() ;
+    }else{
+      $validaciones['id_vale'] = 0 ;
     }
 
-    header('Content-Type: application/json');
+    //header('Content-Type: application/json');
     echo json_encode([
         'response' => count($validaciones) === 0,
         'errors'   => $validaciones
@@ -100,14 +104,18 @@ function guardar_vale() {
       // Consigo el ultimo ID insertado
       $ultimo_idvale = $mysqli->insert_id ;
       // anexo la lista de Id_Entradas que Saldran en caso de que el Hilo sea Producido
-      $lista_entradas = $_GET['detallecomprado'] ;
-      for($i=0; $i < count($lista_entradas); $i++){
-        $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada,presenta_cant,Bobinas,presenta,kilos)"
-          ."VALUES(" .$ultimo_idvale. "," .$lista_entradas[$i]['id']. "," .$lista_entradas[$i]['cantidadP']. "," .$lista_entradas[$i]['cantidadB'].
-          "," .(trim($lista_entradas[$i]['Presenta'])==="BOLSA"?2:(trim($lista_entradas[$i]['Presenta'])==="CAJA"?3:(trim($lista_entradas[$i]['Presenta'])==="PALET"?4:(trim($lista_entradas[$i]['Presenta'])==="TARIMA"?1:5)))).
-          "," .$lista_entradas[$i]['cantidadK']. ")" ;
+      if (trim ($_GET['tipo']) === "COMPRADO"){
+        $lista_entradas = $_GET['detallecomprado'] ;
+        for($i=0; $i < count($lista_entradas); $i++){
+          $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada,presenta_cant,Bobinas,presenta,kilos)"
+            ."VALUES(" .$ultimo_idvale. "," .$lista_entradas[$i]['id']. "," .$lista_entradas[$i]['cantidadP']. "," .$lista_entradas[$i]['cantidadB'].
+            "," .(trim($lista_entradas[$i]['Presenta'])==="BOLSA"?2:(trim($lista_entradas[$i]['Presenta'])==="CAJA"?3:(trim($lista_entradas[$i]['Presenta'])==="PALET"?4:(trim($lista_entradas[$i]['Presenta'])==="TARIMA"?1:5)))).
+            "," .$lista_entradas[$i]['cantidadK']. ")" ;
 
-        $mysqli->query($consulta3) ;
+          $mysqli->query($consulta3) ;
+        }
+      }else{
+          $lista_entradas = $_GET['id_ent'] ;
       }
       // Lleno la informacion de detalle
       $lista_detalle = $_GET['detalle'] ;
