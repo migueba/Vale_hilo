@@ -116,6 +116,22 @@ function guardar_vale() {
         }
       }else{
           $lista_entradas = $_GET['id_ent'] ;
+          for($i=0; $i < count($lista_entradas); $i++){
+            $detalle_entrada = "SELECT * FROM entradash WHERE identradash = ".$lista_entradas[$i]['id']  ;
+            $resultado = $mysqli->query($detalle_entrada) ;
+
+            while($row = $resultado->fetch_assoc()){
+              $idpresenta_ = $row['id_presenta'] ;
+              $numero_ = $row['numero'] ;
+              $bobinas_ = $row['bobinas'] ;
+              $kilos_ = $row['pesoneto'] ;
+            }
+            $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada,presenta_cant,Bobinas,presenta,kilos)"
+              . "VALUES(" .$ultimo_idvale. "," .$lista_entradas[$i]['id']. "," .$numero_. "," .$bobinas_.","
+              . $idpresenta_ . "," .$kilos_. ")" ;
+
+            $mysqli->query($consulta3) ;
+          }
       }
       // Lleno la informacion de detalle
       $lista_detalle = $_GET['detalle'] ;
@@ -135,16 +151,108 @@ function guardar_vale() {
 
 function cancelar_vale() {
   include("bd.php") ;
-  $consulta = "UPDATE vale_hilo SET estado = 0 WHERE idvale_hilo = ". $_GET['id_vale'];
-  if ($resultado = $mysqli->query($consulta)) {
-    $mysqli->close();
-    header('content-type text/plain');
-    echo "Se Cancelo el Vale";
+
+  $consulta = "SELECT * FROM vale_hilo WHERE idvale_hilo = ". $_GET['id_vale'];
+  $resultado = $mysqli->query($consulta) ;
+
+  while($row = $resultado->fetch_assoc()){
+    $estado_vale = $row['estado'] ;
+  }
+
+  if ($estado_vale === "-1" ){
+    $consulta = "UPDATE vale_hilo SET estado = 0 WHERE idvale_hilo = ". $_GET['id_vale'];
+    if ($resultado = $mysqli->query($consulta)) {
+      $mysqli->close();
+      header('content-type text/plain');
+      echo "Se Cancelo el Vale";
+    }else{
+      $mysqli->close();
+      header('content-type text/plain');
+      echo "NO SE PUDO CANCELAR EL VALE";
+    }
   }else{
     $mysqli->close();
     header('content-type text/plain');
-    echo "No se pudo Cancelar el Vale";
+    echo "NO SE PUDO CANCELAR EL VALE, Ya fue Verificado/Cancelado.".$estado_vale ;
   }
+}
+
+function ver_vales() {
+  require '../vendor/autoload.php' ;
+
+  use Dompdf\Dompdf;
+  use Dompdf\Options;
+
+  $content = '';
+
+  $content .= '
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+
+  <div id="vale" style="width: 750px; margin: 0 auto; margin-top: 15px; border-style: dashed; border-color: black; ">
+    <div class="row">
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4" >
+        <img style="height: 100px; width: 220px; display: block;"  src="../images/FABRICA MARÍA SIN FONDO_negro_corta.png" />
+      </div>
+      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8" >
+        <h3 style="margin-top:35px; margin-left:18%;">Vale de Hilo N° 1</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3" >
+        <p>Fecha: <strong></strong></p>
+        <p>Hilo: <strong></strong></p>
+        <p>Bobinas: <strong></strong></p>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" >
+        <p>Supervisor: <strong></strong></p>
+        <p><strong></strong></p>
+        <p>Nº Tarima: <strong></strong></p>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3" >
+        <p>Turno: <strong></strong></p>
+        <p><p><strong></strong></p></p>
+        <p>Kilos: <strong></strong></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3" >
+          <p>Bolsas: <strong></strong></p>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3" >
+          <p>Cajas: <strong></strong></p>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3" >
+          <p>Palet: <strong></strong></p>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3" >
+          <p>Tarimas: <strong></strong></p>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12" >
+        <table id="destino" class="table">
+          <thead class=\"thead-light\">
+            <tr>
+              <th scope=\"col\">Bobinas</th>
+              <th scope=\"col\">Kilos</th>
+              <th scope=\"col\">Destino</th>
+              <th scope=\"col\">Tela</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  ';
+
+  echo $content ;
+
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])){
@@ -153,6 +261,7 @@ if(isset($_GET['function']) && !empty($_GET['function'])){
         case 'lista_vale' : lista_vale(); break;
         case 'validar_vale' : validar_vale(); break;
         case 'cancelar_vale' : cancelar_vale(); break;
+        case 'ver_vales' : ver_vales(); break;
     }
 }
 ?>

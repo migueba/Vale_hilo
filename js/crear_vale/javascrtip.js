@@ -250,7 +250,7 @@ $( function() {
       "<div class=\"col-lg-3\">"+
         "<div class=\"form-group\">" +
           "<label>Tela</label>"+
-          "<input type=\"text\" data-id=\"0\" name=\"detalle[0][tela]\" class=\"form-control \" required />"+
+          "<input type=\"text\" data-id=\"0\" name=\"detalle[0][tela]\" class=\"form-control \" onkeyup=\"javascript:this.value=this.value.toUpperCase();\" required />"+
         "</div>"+
       "</div>"+
     "</div>");

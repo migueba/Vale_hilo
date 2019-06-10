@@ -10,7 +10,6 @@ $( function() {
       $("#contenido").html('');
       $("#contenido").append("<thead class=\"thead-light\">"+
         "<tr>"+
-          "<th scope=\"col\">Sel.</th>"+
           "<th scope=\"col\">VALE</th>"+
           "<th scope=\"col\">Hilo</th>"+
           "<th scope=\"col\"></th>"+
@@ -31,9 +30,6 @@ $( function() {
           // Vamos agregando a nuestra tabla las filas necesarias
           var $fechapre = (value.fecha).split('-');
           $("#contenido").append("<tr>"+
-              "<td>"+
-                "<input data-i=\""+i+"\" type=\"checkbox\" value="+value.vale+" class=\"mycheck form-control\" name=\"vale_sel["+i+"][id]\"> "+
-              "</td>"+
               "<td>"+value.vale+"</td>"+
               "<td>"+value.hilo+"</td>"+
               "<td>"+$.trim(value.nombre)+"</td>"+
@@ -113,6 +109,23 @@ $( function() {
     }
   });
 
-
+  var form = $("#ver_vales");
+  form.submit(function(){
+      event.preventDefault();
+      $.ajax({
+          url: "modelo/vale.php",
+          method: "GET",
+          data: form.serialize() + "&function=ver_vales",
+          dataType: "json",
+          success: function(r){
+            window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
+            location.reload();
+          },
+          error: function(r){
+            alert("El error ");
+          }
+      });
+      return false;
+  });
 
 });
