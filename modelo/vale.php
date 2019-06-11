@@ -180,8 +180,7 @@ function cancelar_vale() {
 function ver_vales() {
   require '../vendor/autoload.php' ;
 
-  use Dompdf\Dompdf;
-  use Dompdf\Options;
+
 
   $content = '';
 
