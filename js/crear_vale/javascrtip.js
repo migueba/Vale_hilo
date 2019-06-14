@@ -417,7 +417,7 @@ $( function() {
         "<div class=\"col-lg-3\">"+
           "<div class=\"form-group\">" +
             "<label>Tela</label>"+
-            "<input class=\"form-control\" type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][tela]\" required/>"+
+            "<input class=\"form-control\" type=\"text\" data-id=\""+(parseInt($(this).attr('data-id'))+1)+"\" name=\"detalle["+(parseInt($(this).attr('data-id'))+1)+"][tela]\" onkeyup=\"javascript:this.value=this.value.toUpperCase();\" required/>"+
           "</div>"+
         "</div>"+
       "</div>");
