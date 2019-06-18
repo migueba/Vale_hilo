@@ -516,13 +516,11 @@ $( function() {
           data: form.serialize() + "&function=validar_vale",
           dataType: "json",
           success: function(r){
-            //if(!r.response) {
-            //  for(var k in r.errors){
-            //    $("span[data-key='" + k + "']").text(r.errors[k]);
-            //  }
-            //}else
-            window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
-            location.reload();
+            if(r.errors['id_vale'] != 0) {
+              window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
+              location.reload();
+            }
+
           },
           error: function(r){
             alert("El error ya se esta corrigiendo "+typeof r);

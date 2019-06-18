@@ -79,6 +79,7 @@ function validar_vale() {
       $validaciones['id_vale'] = guardar_vale() ;
     }else{
       $validaciones['id_vale'] = 0 ;
+
     }
 
     //header('Content-Type: application/json');
