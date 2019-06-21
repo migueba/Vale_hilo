@@ -56,7 +56,7 @@ function hilo_entradas() {
       WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus <> ( 0 )
       GROUP BY A.identradash
       ORDER BY A.fecha ASC) as S
-  WHERE S.pesoneto <> 0 ";
+  WHERE S.pesoneto > 0 AND S.bobinas <> 0 ";
 
   if ($resultado = $mysqli->query($consulta)) {
     $rawdata = array();
