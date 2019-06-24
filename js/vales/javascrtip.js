@@ -118,7 +118,7 @@ $( function() {
           data: form.serialize() + "&function=ver_vales",
           dataType: "json",
           success: function(r){
-            window.open('http://192.168.1.13/vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
+            window.open('modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
             location.reload();
           },
           error: function(r){
