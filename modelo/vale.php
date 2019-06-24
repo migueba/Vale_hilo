@@ -117,22 +117,25 @@ function guardar_vale() {
         }
       }else{
           $lista_entradas = $_GET['id_ent'] ;
-          for($i=0; $i < count($lista_entradas); $i++){
-            $detalle_entrada = "SELECT * FROM entradash WHERE identradash = ".$lista_entradas[$i]['id']  ;
+
+          foreach ($_GET['id_ent'] as $row) {
+            $detalle_entrada = "SELECT * FROM entradash WHERE identradash = ".$row['id'] ;
             $resultado = $mysqli->query($detalle_entrada) ;
 
-            while($row = $resultado->fetch_assoc()){
-              $idpresenta_ = $row['id_presenta'] ;
-              $numero_ = $row['numero'] ;
-              $bobinas_ = $row['bobinas'] ;
-              $kilos_ = $row['pesoneto'] ;
+            while($row2 = $resultado->fetch_assoc()){
+              $idpresenta_ = $row2['id_presenta'] ;
+              $numero_ = $row2['numero'] ;
+              $bobinas_ = $row2['bobinas'] ;
+              $kilos_ = $row2['pesoneto'] ;
             }
+
             $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada,presenta_cant,Bobinas,presenta,kilos)"
-              . "VALUES(" .$ultimo_idvale. "," .$lista_entradas[$i]['id']. "," .$numero_. "," .$bobinas_.","
+              . "VALUES(" .$ultimo_idvale. "," .$row['id']. "," .$numero_. "," .$bobinas_.","
               . $idpresenta_ . "," .$kilos_. ")" ;
 
             $mysqli->query($consulta3) ;
           }
+
       }
       // Lleno la informacion de detalle
       $lista_detalle = $_GET['detalle'] ;

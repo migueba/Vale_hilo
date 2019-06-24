@@ -11,7 +11,7 @@
 
   $consulta = "SELECT A.idvale_hilo as id, A.Fecha, A.turno,B.Bobinas, B.kilos ,D.descripcion as Presenta,
     B.Presenta_cant as numero, CONCAT(trim(E.nombre),\" \",trim(E.apaterno),\" \",trim(E.amaterno)) as supervisor,
-    C.hilo, C.descripcion, IF(C.prod_neta <> .96,\"COMPRA-MAQ.\",\"PRODUCIDO   \") as tipo
+    C.hilo, C.descripcion, IF(C.prod_neta <> 0.96,\"COMPRA-MAQ.\",\"PRODUCIDO   \") as tipo
   FROM vale_hilo A
     INNER JOIN vale_entrada B ON A.idvale_hilo = B.idvale
     LEFT JOIN articulo C ON A.hilo = C.hilo
