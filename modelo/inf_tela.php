@@ -20,11 +20,10 @@
 
     // Get the highest row and column numbers referenced in the worksheet
     $highestRow = $sheet->getHighestRow(); // e.g. 10
-    $highestColumn = 'F'; // e.g 'F'
+    $highestColumn = 'F'; // Tenia 'F'
     $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-    for ($row = 6; $row <= $highestRow; ++$row) {
-        //for ($col = 2; $col <= $highestColumnIndex; ++$col) {
+    for ($row = 6; $row <= $highestRow; ++$row) { // Tenia 6
             $clave = $sheet->getCellByColumnAndRow(2, $row)->getValue();
             $tela =  strtoupper($sheet->getCellByColumnAndRow(3, $row)->getValue());
             $pie =  $sheet->getCellByColumnAndRow(4, $row)->getValue();
@@ -42,12 +41,13 @@
               $data['tela'] = $tela ;
               $data['pie'] = $pie ;
               $data['trama'] = $trama ;
+
               array_push($TelasArray, $data);
             }
-        //}
     }
     asort($TelasArray);
   }
+
   $_SESSION["telas"] = $TelasArray;
   //echo json_encode($TelasArray,JSON_UNESCAPED_UNICODE) ;
 ?>

@@ -40,10 +40,10 @@ function hilo_entradas() {
       A.identradash as id, B.numero as numerob, B.peso as pesob, B.bobinas as bobib
     FROM entradash A
       LEFT JOIN (
-  		select sum(A.kilos) as peso, sum(A.Bobinas) as bobinas, sum(A.presenta_cant) as numero, A.id_entrada
+  		select sum(IFNULL(A.kilos,0)) as peso, sum(IFNULL(A.Bobinas,0)) as bobinas, sum(IFNULL(A.presenta_cant,0)) as numero, A.id_entrada
           from vale_entrada A
           INNER JOIN vale_hilo B ON A.idvale = B.idvale_hilo
-  		WHERE B.hilo = ". $_GET['idhilo'] ." AND B.estado <> 0 group by A.id_entrada
+  		WHERE B.hilo = ". $_GET['idhilo'] ." AND B.estado = -1 group by A.id_entrada
   		) B ON  A.identradash = B.id_entrada
       LEFT JOIN (
   		SELECT A.id_entrada, SUM(IFNULL(A.numero,0)) as numero, SUM(IFNULL(A.peso,0)) as peso, SUM(IFNULL(A.bobinas,0)) as bobinas
