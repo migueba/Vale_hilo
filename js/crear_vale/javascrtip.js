@@ -4,146 +4,159 @@ $( function() {
   // Busca el Nombre del Hilo usando su Clave
   $(".form-group").on('focusout', '#clave_hilo', function(event){
     event.preventDefault();
-    $('span[data-key=clave_hilo]').html('');
-    $("#msn-devolucion").html('');
-    $("#contenido").html('');
-    $( "#waiting" ).show( "slow" );
-    $('#guardavale').prop('disabled', true);
-    var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
 
-    $.ajax({
-      url: "modelo/hilo.php",
-      method: "GET",
-      data: { idhilo : idhilo_var , function : 'hilo_inf'},
-      dataType: "json",
-      success: function(data){
-        $('input[id=hilos]').val(data.descripcion) ;
-        $('input[id=tipo]').val(data.prod) ;
-        $('input[id=generico]').val(data.generico) ;
+    var valida_fecha = $("#fecha").val() ;
+    var fecha2 = valida_fecha.split("-") ;
+    valida_fecha = fecha2[0]+fecha2[1]+fecha2[2] ;
 
-        $.ajax({
-          url: "modelo/hilo.php",
-          method: "GET",
-          data: {idhilo : idhilo_var , function : 'hilo_entradas' },
-          dataType: "json",
-          success: function(data){
-            $("#detalle").html('') ;
-            $("#totales").html('') ;
-            $("#contenido").html('');
-            $('#guardavale').prop('disabled', true);
+    if (valida_fecha.length === 0 ){
+      if ( $(this).val() != 0 ){
+          $(this).val(0) ;
+          $('input[id=hilos]').val("") ;
+          alert("Es necesario Ingresar Primero la FECHA") ;
+      }
+    }else{
+      $('span[data-key=clave_hilo]').html('') ;
+      $("#msn-devolucion").html('') ;
+      $("#contenido").html('') ;
+      $( "#waiting" ).show( "slow" ) ;
+      $('#guardavale').prop('disabled', true) ;
+      var idhilo_var = parseFloat($('input[id=clave_hilo]').val()).toFixed(2) ;
 
-            if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-              $("#divcontenido").removeClass();
-              $("#divdetalle").removeClass();
-              $("#divcontenido").addClass("col-xl-8 col-lg-12 col-md-12 col-sm-12");
-              $("#divdetalle").addClass("col-xl-4 col-lg-12 col-md-12 col-sm-12");
+      $.ajax({
+        url: "modelo/hilo.php",
+        method: "GET",
+        data: { idhilo : idhilo_var , function : 'hilo_inf' },
+        dataType: "json",
+        success: function(data){
+          $('input[id=hilos]').val(data.descripcion) ;
+          $('input[id=tipo]').val(data.prod) ;
+          $('input[id=generico]').val(data.generico) ;
 
-              $("#contenido").append("<thead class=\"thead-light\">"+
-                "<tr>"+
-                  "<th scope=\"col\">Sel.</th>"+
-                  "<th scope=\"col\">Fecha</th>"+
-                  "<th scope=\"col\">#</th>"+
-                  "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Kg. Neto</th>"+
-                  "<th scope=\"col\">Conos</th>"+
-                  "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Cantidad</th>"+
-                  "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Bobinas</th>"+
-                  "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Kgs</th>"+
-                "</tr>"+
-              "</thead> "+
-              "<tbody>");
-            }else{
-              $("#divcontenido").removeClass();
-              $("#divdetalle").removeClass();
-              $("#divcontenido").addClass("col-xl-6 col-lg-6 col-md-12 col-sm-12");
-              $("#divdetalle").addClass("col-xl-6 col-lg-6 col-md-12 col-sm-12");
+          $.ajax({
+            url: "modelo/hilo.php",
+            method: "GET",
+            data: {idhilo : idhilo_var , function : 'hilo_entradas', fecha_v : valida_fecha  },
+            dataType: "json",
+            success: function(data){
+              $("#detalle").html('') ;
+              $("#totales").html('') ;
+              $("#contenido").html('');
+              $('#guardavale').prop('disabled', true);
 
-              $("#contenido").append("<thead class=\"thead-light\">"+
-                "<tr>"+
-                  "<th scope=\"col\">Sel.</th>"+
-                  "<th scope=\"col\">Fecha</th>"+
-                  "<th scope=\"col\">Lote</th>"+
-                  "<th scope=\"col\">Tarima</th>"+
-                  "<th scope=\"col\"></th>"+
-                  "<th scope=\"col\">Kg. Neto</th>"+
-                  "<th scope=\"col\">Conos</th>"+
-                "</tr>"+
-              "</thead> "+
-              "<tbody>");
-            }
-            // Vemos que la respuesta no este vacía y sea una arreglo
-            if(data != null && $.isArray(data)){
-              var i = 0 ;
-              $.each(data, function(key, value){
-                var parts = (value.Fecha).split("-") ;
-                // Vamos agregando a nuestra tabla las filas necesarias
-                if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
-                  $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
-                    "<th scope=\"row\" class=\"text-center\">"+
-                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"detallecomprado["+i+"][id]\"> "+
-                    "</th>"+
-                    "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
-                    "<td class=\"text-right font-weight-bold\">"+value.tarima + "</td>"+
-                    "<td>"+value.presentacion+"</td>"+
-                    "<td class=\"font-weight-bold\">"+value.pesoneto+"</td>"+
-                    "<td class=\"text-center\">"+ value.bobinas +"</td>"+
-                    "<td></td>"+
-                    "<td>"+
-                      "<input type=\"text\" data-P=\""+i+"\" data-maximo=\""+value.tarima+"\" id=\"CPresenta"+i+"\" class=\"form-control input-sm\" readonly />"+
-                    "</td>"+
-                    "<td class=\"text-left\">"+
-                      "<input type=\"text\" id=\"Presenta"+i+"\" class=\"form-control\" value=\""+value.presentacion+"\" readonly />"+
-                    "</td>"+
-                    "<td>"+
-                      "<input type=\"text\" data-B=\""+i+"\" data-bobinas=\""+value.bobinas+"\" data-kilos=\""+value.pesoneto+"\" value=\"0\" id=\"BPresenta"+i+"\" class=\"form-control\" readonly />"+
-                    "</td>"+
-                    "<td class=\"text-left\">Bobinas</td>"+
-                    "<td>"+
-                      "<input type=\"text\" data-K=\""+i+"\" id=\"KPresenta"+i+"\" value=\"0\" class=\"form-control\" readonly />"+
-                    "</td>"+
-                  "</tr>");
-                }else{
-                  $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
-                    "<th scope=\"row\" class=\"text-center\">"+
-                      "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"][id]\"> "+
-                    "</th>"+
-                    "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
-                    "<td>"+(value.lote === "0" ? '' : value.lote)+"</td>"+
-                    "<td>"+value.tarima + "</td>"+
-                    "<td>"+value.presentacion+"</td>"+
-                    "<td>"+value.pesoneto+"</td>"+
-                    "<td>"+ value.bobinas +"</td>"+
-                  " </tr>");
-                }
-                i++;
-              });
+              if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+                $("#divcontenido").removeClass();
+                $("#divdetalle").removeClass();
+                $("#divcontenido").addClass("col-xl-8 col-lg-12 col-md-12 col-sm-12");
+                $("#divdetalle").addClass("col-xl-4 col-lg-12 col-md-12 col-sm-12");
 
-              $("#contenido").append("</tbody>") ;
-              $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
-              $("#msn-devolucion").append("INDICA QUE ES DEVOLUCION") ;
-            }
-            $( "#waiting" ).hide( "slow" );
-          },
-          error: function(r) {
-            alert("No se puedo establecer Conexión a la Base de Datos");
-            $("#waiting").hide("slow");
-          },
-        });
-      },
-      error: function(r) {
-        $('#clave_hilo').val('');
-        $('span[data-key=clave_hilo]').append("No Existe la Clave de Hilo");
-        $('input[id=hilos]').val("") ;
-        $('input[id=tipo]').val("") ;
-        $('input[id=generico]').val("") ;
-        $("#contenido").html('');
-        $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
-        $( "#waiting" ).hide( "slow" );
-      },
-    });
+                $("#contenido").append("<thead class=\"thead-light\">"+
+                  "<tr>"+
+                    "<th scope=\"col\">Sel.</th>"+
+                    "<th scope=\"col\">Fecha</th>"+
+                    "<th scope=\"col\">#</th>"+
+                    "<th scope=\"col\"></th>"+
+                    "<th scope=\"col\">Kg. Neto</th>"+
+                    "<th scope=\"col\">Conos</th>"+
+                    "<th scope=\"col\"></th>"+
+                    "<th scope=\"col\">Cantidad</th>"+
+                    "<th scope=\"col\"></th>"+
+                    "<th scope=\"col\">Bobinas</th>"+
+                    "<th scope=\"col\"></th>"+
+                    "<th scope=\"col\">Kgs</th>"+
+                  "</tr>"+
+                "</thead> "+
+                "<tbody>");
+              }else{
+                $("#divcontenido").removeClass();
+                $("#divdetalle").removeClass();
+                $("#divcontenido").addClass("col-xl-6 col-lg-6 col-md-12 col-sm-12");
+                $("#divdetalle").addClass("col-xl-6 col-lg-6 col-md-12 col-sm-12");
+
+                $("#contenido").append("<thead class=\"thead-light\">"+
+                  "<tr>"+
+                    "<th scope=\"col\">Sel.</th>"+
+                    "<th scope=\"col\">Fecha</th>"+
+                    "<th scope=\"col\">Lote</th>"+
+                    "<th scope=\"col\">Tarima</th>"+
+                    "<th scope=\"col\"></th>"+
+                    "<th scope=\"col\">Kg. Neto</th>"+
+                    "<th scope=\"col\">Conos</th>"+
+                  "</tr>"+
+                "</thead> "+
+                "<tbody>");
+              }
+              // Vemos que la respuesta no este vacía y sea una arreglo
+              if(data != null && $.isArray(data)){
+                var i = 0 ;
+                $.each(data, function(key, value){
+                  var parts = (value.Fecha).split("-") ;
+                  // Vamos agregando a nuestra tabla las filas necesarias
+                  if ($.trim($('input[id=tipo]').val()) === "COMPRADO"){
+                    $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
+                      "<th scope=\"row\" class=\"text-center\">"+
+                        "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"detallecomprado["+i+"][id]\"> "+
+                      "</th>"+
+                      "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
+                      "<td class=\"text-right font-weight-bold\">"+value.tarima + "</td>"+
+                      "<td>"+value.presentacion+"</td>"+
+                      "<td class=\"font-weight-bold\">"+value.pesoneto+"</td>"+
+                      "<td class=\"text-center\">"+ value.bobinas +"</td>"+
+                      "<td></td>"+
+                      "<td>"+
+                        "<input type=\"text\" data-P=\""+i+"\" data-maximo=\""+value.tarima+"\" id=\"CPresenta"+i+"\" class=\"form-control input-sm\" readonly />"+
+                      "</td>"+
+                      "<td class=\"text-left\">"+
+                        "<input type=\"text\" id=\"Presenta"+i+"\" class=\"form-control\" value=\""+value.presentacion+"\" readonly />"+
+                      "</td>"+
+                      "<td>"+
+                        "<input type=\"text\" data-B=\""+i+"\" data-bobinas=\""+value.bobinas+"\" data-kilos=\""+value.pesoneto+"\" value=\"0\" id=\"BPresenta"+i+"\" class=\"form-control\" readonly />"+
+                      "</td>"+
+                      "<td class=\"text-left\">Bobinas</td>"+
+                      "<td>"+
+                        "<input type=\"text\" data-K=\""+i+"\" id=\"KPresenta"+i+"\" value=\"0\" class=\"form-control\" readonly />"+
+                      "</td>"+
+                    "</tr>");
+                  }else{
+                    $("#contenido").append("<tr "+(value.entrada==="DEVOLUCION" ? 'class =\"bg-info text-dark\"':'')+" >"+
+                      "<th scope=\"row\" class=\"text-center\">"+
+                        "<input data-i=\""+i+"\" data-peso=\""+value.pesoneto+"\" data-bobina=\""+value.bobinas+"\" type=\"checkbox\" value="+value.id+" class=\"mycheck form-control\" name=\"id_ent["+i+"][id]\"> "+
+                      "</th>"+
+                      "<td>"+parts[2]+"/"+parts[1]+"/"+parts[0]+"</td>"+
+                      "<td>"+(value.lote === "0" ? '' : value.lote)+"</td>"+
+                      "<td>"+value.tarima + "</td>"+
+                      "<td>"+value.presentacion+"</td>"+
+                      "<td>"+value.pesoneto+"</td>"+
+                      "<td>"+ value.bobinas +"</td>"+
+                    " </tr>");
+                  }
+                  i++;
+                });
+
+                $("#contenido").append("</tbody>") ;
+                $("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
+                $("#msn-devolucion").append("INDICA QUE ES DEVOLUCION") ;
+              }
+              $( "#waiting" ).hide( "slow" );
+            },
+            error: function(r) {
+              alert("No se puedo establecer Conexión a la Base de Datos");
+              $("#waiting").hide("slow");
+            },
+          });
+        },
+        error: function(r) {
+          $('#clave_hilo').val('');
+          $('span[data-key=clave_hilo]').append("No Existe la Clave de Hilo");
+          $('input[id=hilos]').val("") ;
+          $('input[id=tipo]').val("") ;
+          $('input[id=generico]').val("") ;
+          $("#contenido").html('');
+          $("#contenido_tabla").css({"max-height":"", "overflow-y":""});
+          $( "#waiting" ).hide( "slow" );
+        },
+      });
+    }
 });
 
   //script cuando le da click a un chebock
@@ -173,6 +186,12 @@ $( function() {
           //return false; Sirve para salir el each
         }else if($.trim($('input[id=tipo]').val()) === "COMPRADO"){
           //$('input[data-P='+$(this).attr('data-i')+']').prop('required', false);
+          resultado_pesott =$('input[id=pesototal]').val() - $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadK\]"]').val()
+          resultado_bobitt = $('input[id=bobinatotal]').val() - $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadB\]"]').val()
+
+          $('input[id=pesototal]').val( resultado_pesott.toFixed(2) ) ;
+          $('input[id=bobinatotal]').val( resultado_bobitt.toFixed(2) ) ;
+
           $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadP\]"]').prop('readOnly', true);
           $('input[name="detallecomprado\['+$(this).attr('data-i')+'\]\[cantidadP\]"]').val(0);
 
