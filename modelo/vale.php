@@ -36,6 +36,67 @@ function lista_vale() {
   }
 }
 
+function reporte_vale_detallado() {
+    include("bd.php") ;
+
+    $fecha1 = explode("-",$_GET['fecha1']) ;
+    $fecha2 = explode("-",$_GET['fecha2'])  ;
+    $valida_fecha1 = $fecha1[0].$fecha1[1].$fecha1[2] ;
+    $valida_fecha2 = $fecha2[0].$fecha2[1].$fecha2[2] ;
+
+    $consulta = "SELECT A.fecha, B.h_practico as titulo, C.bobinas as bobinas, C.kilos as kgs,
+    	IFNULL(D.descripcion,\" \") as destino, A.idvale_hilo as vale,
+    	CONCAT(TRIM(E.nombre ),\" \",TRIM(E.apaterno)) as autoriza
+    FROM vale_hilo A
+    	INNER JOIN articulo B ON A.hilo = B.hilo
+    	INNER JOIN vale_hilo_detalle C ON A.idvale_hilo = C.idvale_hilo
+        LEFT JOIN origen D ON C.destino = D.idorigen
+        LEFT JOIN usuarios E ON A.supervisor = E.num_emp
+    WHERE A.estado = 1 AND (A.fecha >= " . $valida_fecha1 . " AND A.Fecha <= ". $valida_fecha2 ." )
+    ORDER BY A.fecha" ;
+
+    if ($resultado = $mysqli->query($consulta)) {
+      $rawdata = array(); $i=0;
+      while($rows = $resultado->fetch_array(MYSQLI_ASSOC)){
+        $rawdata[$i] = $rows;
+        $i++;
+      }
+
+      $resultado->close();
+      $mysqli->close();
+      header('Content-Type: text/html; charset=utf-8');
+      echo "<html lang=\"es\">
+        <head>
+          <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+          <meta name=\"description\" content=\"Reporte Detallado de Vales\">
+          <meta name=\"author\" content=\"JuCeBaRo\">
+
+          <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/bootstrap.css\">
+        </head>
+
+        <body>
+          <div class=\"container\">";
+
+      for($i=0; $i < count($rawdata); $i++){
+        echo $rawdata[$i]['vale']  ;
+        echo "<br>";
+      }
+
+      echo  "</div>
+        </body>
+      </html>";
+
+    }else{
+      $mysqli->close();
+      echo "No se pudo obtener la infomacion deseada";
+    }
+}
+
+function reporte_vale_general() {
+    include("bd.php") ;
+
+}
+
 ////////////// Para validar la informacion de el Vale y asi poder guardarlo //////////////
 function validar_vale() {
   $validaciones = [];
@@ -184,8 +245,6 @@ function cancelar_vale() {
 function ver_vales() {
   require '../vendor/autoload.php' ;
 
-
-
   $content = '';
 
   $content .= '
@@ -265,6 +324,7 @@ if(isset($_GET['function']) && !empty($_GET['function'])){
         case 'validar_vale' : validar_vale(); break;
         case 'cancelar_vale' : cancelar_vale(); break;
         case 'ver_vales' : ver_vales(); break;
+        case 'reporte_vale_detallado' : reporte_vale_detallado(); break;
     }
 }
 ?>

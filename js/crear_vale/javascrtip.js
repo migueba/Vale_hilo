@@ -140,7 +140,7 @@ $( function() {
               $( "#waiting" ).hide( "slow" );
             },
             error: function(r) {
-              alert("No se puedo establecer Conexión a la Base de Datos");
+              alert("Es Necesario Indicar la Fecha Primero");
               $("#waiting").hide("slow");
             },
           });

@@ -74,7 +74,7 @@
           <i class="fas fa-fw fa-wrench"></i>
           <span>Construcciones</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="reportes.html">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Reportes</span></a>
@@ -175,14 +175,26 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
-          <!-- Content Row -->
           <div class="row">
-            <!-- Area Chart -->
-            <div class="col-xl-12 col-lg-12">
-              <div class="chart-area">
-                <canvas id="myAreaChart"></canvas>
-              </div>
+            <div class="col-xl-7 col-lg-7 col-md-10 col-sm-12">
+                <form method="GET"  autocomplete="off" action="modelo/vale.php">
+                  <input type="hidden" name="function" value="reporte_vale_detallado" />
+                  <div class="row">
+                    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
+                      <div class="form-group">
+                          <input type="date" id="fecha1" class="form-control" name="fecha1" required/>
+                      </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
+                      <div class="form-group">
+                          <input type="date" id="fecha2" class="form-control" name="fecha2" required/>
+                      </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                        <button type="submit" id="imprimevale" class="btn btn-primary" style="margin-top:-13px" >Reporte Detallado</button>
+                    </div>
+                  </div>
+                </form>
             </div>
           </div>
         </div>
@@ -227,20 +239,9 @@
 
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="vendor/Numeral-js/numeral.js"></script>
 
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
-
-
-  <!-- Page level plugins -->
-  <script src="vendor/chart.js/Chart.min.js"></script>
-  <script src="vendor/chart.js/Chart.bundle.min.js"></script>
-
-  <script src="js/canvas/grafica_index.js"></script>
-
-
-
 </body>
 
 </html>
