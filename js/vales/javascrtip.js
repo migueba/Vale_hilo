@@ -89,7 +89,7 @@ $( function() {
 
   $("#contenido").on('click', '.clickojo', function(data) {
     var id_vale = $(this).attr('id-vale') ;
-    window.open('modelo/ver_vale.html?id_vale='+id_vale, '_blank');
+    window.open( "modelo/ver_vale.html?id_vale="+id_vale, "Vale Hilo", "width=850,height=500, top=85,left=100");
   });
 
   $("#contenido").on('click', '.clickcancel', function(data) {
@@ -118,11 +118,11 @@ $( function() {
           data: form.serialize() + "&function=ver_vales",
           dataType: "json",
           success: function(r){
-            window.open('modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
+            window.open( "modelo/ver_vale.html?id_vale="+r.errors['id_vale'], "Vale Hilo", "width=850,height=500, top=85,left=100");
             location.reload();
           },
           error: function(r){
-            alert("El error ");
+            alert("No se pudo Mostrar el Vale");
           }
       });
       return false;

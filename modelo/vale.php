@@ -44,7 +44,7 @@ function reporte_vale_detallado() {
     $valida_fecha1 = $fecha1[0].$fecha1[1].$fecha1[2] ;
     $valida_fecha2 = $fecha2[0].$fecha2[1].$fecha2[2] ;
 
-    $consulta = "SELECT A.fecha, B.h_practico as titulo, C.bobinas as bobinas, C.kilos as kgs,
+    $consulta = "SELECT A.fecha, B.hilo, B.descripcion as nombre , C.bobinas as bobinas, C.kilos as kgs,
     	IFNULL(D.descripcion,\" \") as destino, A.idvale_hilo as vale,
     	CONCAT(TRIM(E.nombre ),\" \",TRIM(E.apaterno)) as autoriza
     FROM vale_hilo A
@@ -53,7 +53,7 @@ function reporte_vale_detallado() {
         LEFT JOIN origen D ON C.destino = D.idorigen
         LEFT JOIN usuarios E ON A.supervisor = E.num_emp
     WHERE A.estado = 1 AND (A.fecha >= " . $valida_fecha1 . " AND A.Fecha <= ". $valida_fecha2 ." )
-    ORDER BY A.fecha" ;
+    ORDER BY B.h_practico,A.fecha,A.idvale_hilo  " ;
 
     if ($resultado = $mysqli->query($consulta)) {
       $rawdata = array(); $i=0;
@@ -70,20 +70,95 @@ function reporte_vale_detallado() {
           <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
           <meta name=\"description\" content=\"Reporte Detallado de Vales\">
           <meta name=\"author\" content=\"JuCeBaRo\">
-
           <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/bootstrap.css\">
         </head>
-
         <body>
-          <div class=\"container\">";
+          <div class=\"container\">
+            <div class=\"row\">
+              <div class=\"col-md-3\" >
+                <img style=\"height: 100px; width: 220px; display: block;\"  src=\"../images/FABRICA MARÍA SIN FONDO_negro_corta.png\" />
+              </div>
+              <div class=\"col-md-9\" >
+                <h3 class=\"mt-4\">Reporte Detallado de Vales del ".$fecha1[2]."/".$fecha1[1]."/".$fecha1[0]." al ".$fecha2[2]."/".$fecha2[1]."/".$fecha2[0]." </h3>
+              </div>
+            </div>
+            <table class=\"table\">
+            <thead class=\"thead-dark\">
+              <tr>
+                <th scope=\"col\">Fecha</th>
+                <th scope=\"col\">Vale</th>
+                <th scope=\"col\">Hilo</th>
+                <th scope=\"col\"></th>
+                <th scope=\"col\">Bobinas</th>
+                <th scope=\"col\">Kilos</th>
+                <th scope=\"col\">Destino</th>
+                <th scope=\"col\">Autoriza</th>
+              </tr>
+            </thead>
+            <tbody>";
 
-      for($i=0; $i < count($rawdata); $i++){
-        echo $rawdata[$i]['vale']  ;
-        echo "<br>";
-      }
+        $totalkilos = 0 ;
+        $totalbobinas = 0 ;
+        $clavetitulo = 0.00 ;
+        $tkgssub = 0 ;
+        $tbobisub = 0;
+        for($i=0; $i < count($rawdata); $i++){
+          $totalkilos = $totalkilos + (float)$rawdata[$i]['kgs'] ;
+          $totalbobinas = $totalbobinas + (int)$rawdata[$i]['bobinas'] ;
 
-      echo  "</div>
-        </body>
+          if ($i===0){
+            $clavetitulo = $rawdata[$i]['hilo'] ;
+
+            $tkgssub = (float)$rawdata[$i]['kgs'] ;
+            $tbobisub = (int)$rawdata[$i]['bobinas'] ;
+
+          }else if($clavetitulo != $rawdata[$i]['hilo']){
+            $clavetitulo = $rawdata[$i]['hilo'] ;
+
+            echo "<tr>
+              <th colspan=\"4\" >Subtotal :</th>
+              <td><b>".number_format($tbobisub, 0, '.', ',')."</b></td>
+              <td><b>".number_format($tkgssub, 2, '.', ',')."</b></td>
+            </tr>";
+
+            $tkgssub = (float)$rawdata[$i]['kgs'] ;
+            $tbobisub = (int)$rawdata[$i]['bobinas'] ;
+
+          }else if($i !=  count($rawdata)-1 ){
+            $tkgssub = $tkgssub + (float)$rawdata[$i]['kgs'] ;
+            $tbobisub = $tbobisub + (int)$rawdata[$i]['bobinas'] ;
+          }
+
+          echo "<tr>
+                  <td>".date_format(date_create($rawdata[$i]['fecha']),'d/m/Y')."</td>
+                  <td>".$rawdata[$i]['vale']."</td>
+                  <td>".$rawdata[$i]['hilo']."</td>
+                  <td>".$rawdata[$i]['nombre']."</td>
+                  <td>".$rawdata[$i]['bobinas']."</td>
+                  <td>".number_format($rawdata[$i]['kgs'], 2, '.', ',')."</td>
+                  <td>".$rawdata[$i]['destino']."</td>
+                  <td>".$rawdata[$i]['autoriza']."</td>
+                </tr>";
+          if ($i ===  count($rawdata)-1 ){
+            echo "<tr>
+              <th colspan=\"4\" >Subtotal :</th>
+              <td><b>".number_format($tbobisub , 0, '.', ',')."</b></td>
+              <td><b>".number_format($tkgssub , 2, '.', ',')."</b></td>
+            </tr>";
+          }
+        }
+
+      echo "
+              <tr>
+                <th colspan=\"4\" >Totales :</th>
+                <td><b>".number_format($totalbobinas, 0, '.', ',')."</b></td>
+                <td><b>".number_format($totalkilos, 2, '.', ',')."</b></td>
+              </tr>
+
+            </tbody>
+            </table>
+      </div>
+      </body>
       </html>";
 
     }else{
