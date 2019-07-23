@@ -78,6 +78,7 @@ $( function() {
                         "<input type=\"text\" id=\"h_trama\" class=\"form-control\" name=\"h_trama\" value=\""+value.pesogm2+"\" readonly />"+
                       "</div>"+
                     "</div>"+
+                  "</div>"+
                     "<div class=\"row\">"+
                       "<div class=\"col-xl-3 col-lg-3 col-md-3 col-sm-3\">"+
                         "<label>Hilos X Pulg.</label>"+

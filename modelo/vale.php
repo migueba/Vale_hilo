@@ -243,11 +243,12 @@ function guardar_vale() {
       // anexo la lista de Id_Entradas que Saldran en caso de que el Hilo sea Producido
       if (trim ($_GET['tipo']) === "COMPRADO"){
         $lista_entradas = $_GET['detallecomprado'] ;
-        for($i=0; $i < count($lista_entradas); $i++){
-          $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada,presenta_cant,Bobinas,presenta,kilos)"
-            ."VALUES(" .$ultimo_idvale. "," .$lista_entradas[$i]['id']. "," .$lista_entradas[$i]['cantidadP']. "," .$lista_entradas[$i]['cantidadB'].
-            "," .(trim($lista_entradas[$i]['Presenta'])==="BOLSA"?2:(trim($lista_entradas[$i]['Presenta'])==="CAJA"?3:(trim($lista_entradas[$i]['Presenta'])==="PALET"?4:(trim($lista_entradas[$i]['Presenta'])==="TARIMA"?1:5)))).
-            "," .$lista_entradas[$i]['cantidadK']. ")" ;
+
+        foreach ($lista_entradas as $row) {
+          $consulta3 = "INSERT INTO vale_entrada(idvale,id_entrada,presenta_cant,Bobinas,presenta,kilos) "
+            ."VALUES(" .$ultimo_idvale. "," .$row['id']. "," .$row['cantidadP']. "," .$row['cantidadB'].
+            "," .(trim($row['Presenta'])==="BOLSA"?2:(trim($row['Presenta'])==="CAJA"?3:(trim($row['Presenta'])==="PALET"?4:(trim($row['Presenta'])==="TARIMA"?1:5)))).
+            "," . $row['cantidadK'] . ")" ;
 
           $mysqli->query($consulta3) ;
         }

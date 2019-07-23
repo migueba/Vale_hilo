@@ -33,29 +33,30 @@ function hilo_entradas() {
   include("bd.php") ;
 
     $consulta = "SELECT * FROM
-    (SELECT A.hilo as clave,A.Fecha , A.lote,
-      (A.numero-(SUM(IFNULL(D.numero,0))+SUM(IFNULL(B.numero,0)))) as tarima, E.descripcion as presentacion,
-      ROUND((A.pesoneto-(SUM(IFNULL(D.peso,0))+SUM(IFNULL(B.peso,0)))),4) AS pesoneto, (A.bobinas-(SUM(IFNULL(D.bobinas,0))+SUM(IFNULL(B.bobinas,0)))) as bobinas ,
-      IF(A.origen=1,\"NORMAL   \",IF(A.origen=6,\"NORMAL   \",\"DEVOLUCION\")) as entrada,
-      A.identradash as id, B.numero as numerob, B.peso as pesob, B.bobinas as bobib
-    FROM entradash A
+      (SELECT A.hilo as clave,A.Fecha , A.lote,
+        (A.numero-(SUM(IFNULL(D.numero,0))+SUM(IFNULL(B.numero,0)))) as tarima, E.descripcion as presentacion,
+        ROUND((A.pesoneto-(SUM(IFNULL(D.peso,0))+SUM(IFNULL(B.peso,0)))),4) AS pesoneto, (A.bobinas-(SUM(IFNULL(D.bobinas,0))+SUM(IFNULL(B.bobinas,0)))) as bobinas ,
+        IF(A.origen=1,\"NORMAL   \",IF(A.origen=6,\"NORMAL   \",\"DEVOLUCION\")) as entrada,
+        A.identradash as id, B.numero as numerob, B.peso as pesob, B.bobinas as bobib
+      FROM entradash A
       LEFT JOIN (
-  		select sum(IFNULL(A.kilos,0)) as peso, sum(IFNULL(A.Bobinas,0)) as bobinas, sum(IFNULL(A.presenta_cant,0)) as numero, A.id_entrada
-          from vale_entrada A
-          INNER JOIN vale_hilo B ON A.idvale = B.idvale_hilo
-  		WHERE B.hilo = ". $_GET['idhilo'] ." AND B.estado = -1 group by A.id_entrada
-  		) B ON  A.identradash = B.id_entrada
+    		  SELECT sum(IFNULL(A.kilos,0)) as peso, sum(IFNULL(A.Bobinas,0)) as bobinas, sum(IFNULL(A.presenta_cant,0)) as numero, A.id_entrada
+            FROM vale_entrada A
+            INNER JOIN vale_hilo B ON A.idvale = B.idvale_hilo
+      		  WHERE B.hilo = ". $_GET['idhilo'] ." AND B.estado = -1 group by A.id_entrada
+    	) B ON  A.identradash = B.id_entrada
       LEFT JOIN (
-  		SELECT A.id_entrada, SUM(IFNULL(A.numero,0)) as numero, SUM(IFNULL(A.peso,0)) as peso, SUM(IFNULL(A.bobinas,0)) as bobinas
-          FROM salidash_detalle A
-          INNER JOIN entradash B ON A.id_entrada = B.identradash AND B.estatus <> 0
-          WHERE B.hilo = ". $_GET['idhilo'] ."
-          GROUP BY A.id_entrada
-  		) D ON A.identradash = D.id_entrada
+    		SELECT A.id_entrada, SUM(IFNULL(A.numero,0)) as numero, SUM(IFNULL(A.peso,0)) as peso, SUM(IFNULL(A.bobinas,0)) as bobinas
+            FROM salidash_detalle A
+            INNER JOIN entradash B ON A.id_entrada = B.identradash AND B.estatus <> 0
+            INNER JOIN salidash C ON A.id_salida = C.idsalidash AND C.estatus <> 0
+            WHERE B.hilo = ". $_GET['idhilo'] ."
+            GROUP BY A.id_entrada
+    	) D ON A.identradash = D.id_entrada
       INNER JOIN presentacion E ON A.id_presenta = E.idpresentacion
-      WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus <> ( 0 ) AND A.fecha <= ". $_GET['fecha_v'] ."
-      GROUP BY A.identradash
-      ORDER BY A.fecha ASC) as S
+        WHERE A.hilo = ". $_GET['idhilo'] ." AND A.estatus <> ( 0 ) AND A.fecha <= ". $_GET['fecha_v'] ."
+        GROUP BY A.identradash
+        ORDER BY A.fecha ASC) as S
   WHERE S.pesoneto > 0 AND S.bobinas <> 0 ";
 
   if ($resultado = $mysqli->query($consulta)) {

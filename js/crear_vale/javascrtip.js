@@ -306,7 +306,7 @@ $( function() {
     }
 
     var $kgs_sel  = parseFloat(($bobi_sel*$(this).attr('data-kilos'))/ $(this).attr('data-bobinas'));
-    $(':text[ name^="detallecomprado['+$(this).attr('data-B')+'][cantidadK]" ]').val($kgs_sel);
+    $(':text[ name^="detallecomprado['+$(this).attr('data-B')+'][cantidadK]" ]').val($kgs_sel.toFixed(2));
 
     var $lista_check = $('.mycheck');
     var $totalpeso = 0 ;
