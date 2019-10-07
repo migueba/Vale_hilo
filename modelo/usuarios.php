@@ -6,7 +6,7 @@
 
     $consulta = "SELECT UPPER(CONCAT(TRIM(A.nombre),' ',TRIM(A.apaterno),' ',TRIM(A.amaterno))) as nombre
     FROM usuarios A
-    	 WHERE A.num_emp = ". $_GET['idemp'] ."  LIMIT 1";
+    	 WHERE A.estatus <> 0 AND A.num_emp = ". $_GET['idemp'] ." AND A.tipo = \"". $_GET['tipoemp'] ."\"  LIMIT 1";
 
     if($resultado = $mysqli->query($consulta)) {
       $fila = $resultado->fetch_row() ;
@@ -30,8 +30,9 @@
 
     $consulta = " SELECT S.num_emp, S.nombre
       FROM
-      (SELECT A.num_emp, UPPER(CONCAT(TRIM(A.nombre),' ',TRIM(A.apaterno),' ',TRIM(A.amaterno))) as nombre
-        FROM usuarios A) as S
+        (SELECT A.num_emp, UPPER(CONCAT(TRIM(A.nombre),' ',TRIM(A.apaterno),' ',TRIM(A.amaterno))) as nombre
+          FROM usuarios A
+          WHERE A.estatus <> 0 AND A.tipo = \"". $_GET['tipoemp'] ."\" ) as S
       WHERE S.nombre LIKE '%" . strtoupper($_GET['term']) . "%'
       ORDER BY S.nombre";
 

@@ -470,7 +470,7 @@ $( function() {
     $.ajax({
         url: "modelo/usuarios.php",
         dataType: "json",
-        data: { idemp : idemp_ , function : 'busca_id'},
+        data: { idemp : idemp_ , tipoemp : 'SUP' ,  function : 'busca_id'},
         success: function(data){
           $('input[id=supervisor]').val(data.nombre) ;
         }
@@ -485,6 +485,7 @@ $( function() {
         dataType: "json",
         data: {
           term: request.term ,
+          tipoemp : 'SUP' ,
           function : 'lista_usuarios'
         },
         success: function( data ) {

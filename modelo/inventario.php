@@ -35,7 +35,7 @@
   function inventario_hilo() {
     include("bd.php") ;
 
-    $consulta = "SELECT s.descripcion, sum(s.pesoneto_cal ) as pesoneto_cal
+    /*$consulta = "SELECT s.descripcion, sum(s.pesoneto_cal ) as pesoneto_cal
     FROM
        (SELECT A.fecha, A.hilo, A.lote, A.turno, A.origen,
         A.Bobinas-SUM(IFNULL(B.bobinas,0)) as bobinas,
@@ -44,7 +44,20 @@
         LEFT JOIN SALIDASH_DETALLE B ON A.identradash = B.id_entrada
          INNER JOIN articulo C ON A.hilo = C.hilo
        WHERE a.eSTATUS <> 0 GROUP BY A.identradash ORDER BY A.hilo) as s
-    where s.pesoneto_cal <> 0 group by s.hilo order by s.descripcion";
+    where s.pesoneto_cal <> 0 group by s.hilo order by s.descripcion";*/
+
+    $consulta = "SELECT s.descripcion, SUM(s.bobinas) as bobinas, ROUND(SUM(s.pesoneto_cal),2) as pesoneto_cal
+    FROM
+    	(SELECT A.hilo,
+    		A.Bobinas-SUM(IF(E.estatus <> 0, IFNULL(B.bobinas,0), 0)) as bobinas,
+    		A.PESONETO-SUM(IF(E.estatus <> 0,IFNULL(B.peso,0),0)) as pesoneto_cal, C.descripcion
+    	FROM entradash A
+    		LEFT JOIN SALIDASH_DETALLE B ON A.identradash = B.id_entrada
+    		LEFT JOIN salidash E ON B.id_salida = E.idsalidash
+    		INNER JOIN articulo C ON A.hilo = C.hilo
+    	WHERE A.ESTATUS <> 0
+    	GROUP BY A.identradash ORDER BY A.hilo) as s
+    WHERE s.pesoneto_cal <> 0 GROUP BY s.hilo ORDER BY s.hilo,s.descripcion";
 
     if($resultado = $mysqli->query($consulta)) {
       $rawdata = array();

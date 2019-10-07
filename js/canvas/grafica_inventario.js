@@ -1,10 +1,13 @@
 var hilos = new Array();
 var peso = new Array();
+var bobinas = new Array();
+
 $.getJSON( "modelo/inventario.php?function=inventario_hilo",
   function( data ) {
     $.each( data, function( key, val ) {
       hilos.push(val.descripcion.trim());
       peso.push(parseFloat(val.pesoneto_cal));
+      bobinas.push(parseInt(val.bobinas));
     });
 
     var ctx = document.getElementById('myAreaChart').getContext('2d');
@@ -13,11 +16,17 @@ $.getJSON( "modelo/inventario.php?function=inventario_hilo",
        data: {
           labels: hilos ,
           datasets: [{
-             label: 'Inventario del Almacen de Hilo',
              data: peso ,
+             label: 'Peso',
              backgroundColor: 'rgba(0, 119, 204, 0.3)',
-             borderWidth: 1
-          }]
+             fill: false
+          },{
+            data: bobinas,
+            label: "Bobinas",
+            backgroundColor: '#CEDBB4',
+            fill: false
+          }
+        ]
        },
        options: {
         tooltips: {
