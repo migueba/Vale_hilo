@@ -118,6 +118,8 @@ $( function() {
 
   // Muestra la Lista de no se que
   function mostrar_lista(julios, numeros, bobinas){
+    var julios_r =  Math.ceil(julios);
+
     $("#tablaurdido").html('');
 
     $("#tablaurdido").append("<thead class=\"thead-light\">"+
@@ -129,16 +131,16 @@ $( function() {
     "</thead> "+
     "<tbody>");
 
-    for(var i = 1; i <= julios; i++){
+    for(var i = 1; i <= julios_r; i++){
       $("#tablaurdido").append("<tr>"+
           "<td>"+
-            i+
+            (i === julios_r ?  ( (i-julios) == 0 ? i : (1-(i-julios)).toFixed(2) ) : i )+
           "</td>"+
           "<td>"+
-            "<input type=\"number\" name=\"detalle["+i+"]['numero']\" class=\"form-control detanumero\" value=\""+numeros+"\" required/>"+
+            "<input type=\"number\" name=\"detalle["+i+"][numero]\" class=\"form-control\" value=\""+numeros+"\" "+ (i === julios_r ?  "": "readonly") +" required/>"+
           "</td>"+
           "<td>"+
-            "<input type=\"number\" name=\"detalle["+i+"]['bobina']\" class=\"form-control detabobina\" value=\""+bobinas+"\" required/>"+
+            "<input type=\"number\" name=\"detalle["+i+"][bobina]\" class=\"form-control\" value=\""+bobinas+"\" "+ (i === julios_r ?  "": "readonly") +" required/>"+
           "</td>"+
         "</tr>");
     }
@@ -151,6 +153,10 @@ $( function() {
     if(julios !== 0 && bobinas !== 0 && numeros !== 0 && n_titulo !== 0){
       var peso_total = (julios * bobinas * numeros * 10 * .59 / n_titulo / 1000);
       $("#ktotales").val(peso_total);
+
+      $('#guardaurdido').prop('disabled', false);
+    }else {
+      $('#guardaurdido').prop('disabled', true);
     }
 
     if(numeros !== 0 && julios !== 0){
@@ -164,7 +170,7 @@ $( function() {
   $(".form-group").on('change', ['#julios', '#numeros', '#bobinas'], function(data) {
     var numero = isNaN(parseInt($("#numeros").val())) ? 0 : parseInt($("#numeros").val());
     var bobina = isNaN(parseInt($("#bobinas").val())) ? 0 : parseInt($("#bobinas").val());
-    var julio = isNaN(parseInt($("#julios").val())) ? 0 : parseInt($("#julios").val());
+    var julio = isNaN( parseFloat( $("#julios").val() ) ) ? 0 : parseFloat($("#julios").val());
 
     mostrar_lista(julio, numero, bobina);
   });
@@ -178,16 +184,12 @@ $( function() {
           url: "modelo/urdido.php",
           method: "GET",
           data: form.serialize() + "&function=guarda_urdido",
-          dataType: "json",
           success: function(r){
-            if(r.errors['id_vale'] != 0) {
-              window.open('vale_hilo/modelo/ver_vale.html?id_vale='+r.errors['id_vale'], '_blank');
-              location.reload();
-            }
-
+            alert(r);
+            location.reload();
           },
           error: function(r){
-            alert("No se puedo guardar la Información");
+            alert("No se puedo guardar la Información "+r);
           }
       });
       return false;
