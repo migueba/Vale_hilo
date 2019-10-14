@@ -74,7 +74,7 @@
       </li>
       <li class="nav-item ">
         <a class="nav-link" href="inventario.html">
-          <i class="fas fa-fw fa-book"></i>
+          <i class="fas fa-fw fa-sticky-note"></i>
           <span>Inventario de Hilo</span></a>
       </li>
 
@@ -166,151 +166,145 @@
             <h1 class="h3 mb-0 text-gray-800">Registrar Urdido</h1>
           </div>
 
-          <div id="Registros" class="row">
+          <div class="container-fluid">
+            <form method="POST" id="formulario" autocomplete="off" action="#">
+              <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                      <label>Fecha</label>
+                      <input type="date" id="fecha" class="form-control" name="fecha" required/>
+                      <span data-key="fecha" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12">
+                  <div class="form-group">
+                      <label>Horas</label>
+                      <input type="text" id="horas" name="horas" class="form-control" required/>
+                      <span data-key="horas" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12">
+                  <div class="form-group ui-widget">
+                    <label>Nº Oficial</label>
+                    <input type="text" id="n_oficial" name="n_oficial" class="form-control" required/>
+                    <span data-key="n_oficial" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-5 col-lg-5 col-md-8 col-sm-12">
+                  <div class="form-group">
+                    <label>Oficial</label>
+                    <input type="text" id="oficial" name="oficial" class="form-control auto-widget" required/>
+                    <span data-key="oficial" class="badge badge-danger"></span>
+                  </div>
+                </div>
+              </div>
 
+              <div id="detalle_hilo" class="row">
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12">
+                  <div class="form-group ui-widget">
+                    <label>Clave</label>
+                    <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" required/>
+                    <span data-key="clave_hilo" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-8 col-sm-12">
+                  <div class="form-group">
+                    <label>Hilo</label>
+                    <input type="text" id="hilo" name="hilo" class="form-control auto-widget" required/>
+                    <span data-key="hilo" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12">
+                  <div class="form-group">
+                    <label>Titulo</label>
+                    <input type="text" id="titulo" name="titulo" class="form-control auto-widget" readonly required/>
+                    <span data-key="titulo" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-8 col-sm-12">
+                  <div class="form-group">
+                    <label>Tela</label>
+                    <input type="text" id="tela" name="tela" class="form-control auto-widget" readonly required/>
+                    <span data-key="tela" class="badge badge-danger"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12">
+                  <div class="form-group">
+                    <label>Julios</label>
+                    <input type="text" id="julios" name="julios" class="form-control auto-widget" required/>
+                    <span data-key="julios" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
+                  <div class="form-group">
+                    <label>Numeros</label>
+                    <input type="text" id="numeros" name="numeros" class="form-control auto-widget" required/>
+                    <span data-key="numeros" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
+                  <div class="form-group">
+                    <label>Bobinas</label>
+                    <input type="text" id="bobinas" name="bobinas" class="form-control auto-widget" required/>
+                    <span data-key="bobinas" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-9">
+                  <div class="form-group">
+                    <label>Orden</label>
+                    <input type="text" id="orden" name="orden" class="form-control auto-widget" value ="0"/>
+                    <span data-key="Orden" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-3">
+                  <div class="form-group">
+                    <label>Last Orden</label>
+                    <input type="text" id="lorden" name="lorden" class="form-control auto-widget" readonly/>
+                    <span data-key="LOrden" class="badge badge-danger"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                  <div class="form-group">
+                    <label>Numeros</label>
+                    <input type="text" id="ntotales" name="ntotales" class="form-control auto-widget" readonly/>
+                    <span data-key="ntotales" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                  <div class="form-group">
+                    <label>Kilos</label>
+                    <input type="text" id="ktotales" name="ktotales" class="form-control auto-widget" readonly/>
+                    <span data-key="ktotales" class="badge badge-danger"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <table id="tablaurdido" class="table table-bordered table-responsive-md table-striped text-center"></table>
+                </div>
+              </div>
+
+              <div class="btn-group">
+                  <button type="submit" id="guardaurdido" class="btn btn-primary" disabled>Guardar</button>
+              </div>
+
+            </form>
           </div>
 
-          <form method="POST" id="formulario" autocomplete="off" action="#">
+          <div style="margin-top:25px">
+            <table class="table table-bordered display responsive nowrap" id="registros" style="width:100%;" >
+          </div>
 
-            <div class="row">
-              <div class="col-xl-2 col-lg-4 col-md-6 col-sm-5">
-                <div class="form-group">
-                    <label>Fecha</label>
-                    <input type="date" id="fecha" class="form-control" name="fecha" required/>
-                    <span data-key="fecha" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-6 col-sm-6">
-                <div class="form-group">
-                    <label>Turno</label>
-                    <select class="form-control" id="turno" name="turno" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <span data-key="turno" class="badge badge-danger"></span>
-                </div>
-              </div>
-
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-5">
-                <div class="form-group ui-widget">
-                  <label>Nº Oficial</label>
-                  <input type="text" id="n_oficial" name="n_oficial" class="form-control" required/>
-                  <span data-key="n_oficial" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-5 col-lg-5 col-md-8 col-sm-12">
-                <div class="form-group">
-                  <label>Oficial</label>
-                  <input type="text" id="oficial" name="oficial" class="form-control auto-widget" required/>
-                  <span data-key="oficial" class="badge badge-danger"></span>
-                </div>
-              </div>
-            </div>
-
-            <div id="detalle_hilo" class="row">
-              <div class="col-xl-1 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group ui-widget">
-                  <label>Clave</label>
-                  <input type="text" id="clave_hilo" name="clave_hilo" class="form-control" required/>
-                  <span data-key="clave_hilo" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-4 col-lg-4 col-md-8 col-sm-8">
-                <div class="form-group">
-                  <label>Hilo</label>
-                  <input type="text" id="hilo" name="hilo" class="form-control auto-widget" required/>
-                  <span data-key="hilo" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Titulo</label>
-                  <input type="text" id="titulo" name="titulo" class="form-control auto-widget" readonly required/>
-                  <span data-key="titulo" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
-                <div class="form-group">
-                  <label>Tela</label>
-                  <input type="text" id="tela" name="tela" class="form-control auto-widget" readonly required/>
-                  <span data-key="tela" class="badge badge-danger"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-xl-1 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Julios</label>
-                  <input type="text" id="julios" name="julios" class="form-control auto-widget" required/>
-                  <span data-key="julios" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Numeros</label>
-                  <input type="text" id="numeros" name="numeros" class="form-control auto-widget" required/>
-                  <span data-key="numeros" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Bobinas</label>
-                  <input type="text" id="bobinas" name="bobinas" class="form-control auto-widget" required/>
-                  <span data-key="bobinas" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Roturas</label>
-                  <input type="text" id="roturas" name="roturas" class="form-control auto-widget" required/>
-                  <span data-key="roturas" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-2 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Numeros</label>
-                  <input type="text" id="ntotales" name="ntotales" class="form-control auto-widget" readonly/>
-                  <span data-key="ntotales" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3">
-                <div class="form-group">
-                  <label>Kilos</label>
-                  <input type="text" id="ktotales" name="ktotales" class="form-control auto-widget" readonly/>
-                  <span data-key="ktotales" class="badge badge-danger"></span>
-                </div>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
-                <div class="form-group">
-                  <label>Orden</label>
-                  <input type="text" id="orden" name="orden" class="form-control auto-widget" value ="0"/>
-                  <span data-key="Orden" class="badge badge-danger"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
-                <table id="tablaurdido" class="table table-bordered table-responsive-md table-striped text-center"></table>
-              </div>
-            </div>
-
-            <div class="btn-group">
-                <button type="submit" id="guardaurdido" class="btn btn-primary" disabled>Guardar</button>
-            </div>
-
-          </form>
         </div>
         <!-- End of Main Content -->
 
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="copyright text-center my-auto fixed-bottom">
-          <span>Copyright &copy; Fabrica Maria 2019</span>
-        </div>
-      </footer>
       <!-- End of Footer -->
     </div>
     <!-- End of Content Wrapper -->
@@ -349,8 +343,13 @@
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+
+  <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="js/dataTables.responsive.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
   <script src="js/urdido/javascrtip.js"></script>
 </body>
 

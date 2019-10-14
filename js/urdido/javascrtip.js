@@ -1,5 +1,17 @@
 $( function() {
 
+  // PARA BUSCAR LA ULTIMA ORDEN REGISTRADA
+  $(".form-group").on('focus', '#orden', function(event){
+    $.ajax({
+        url: "modelo/urdido.php",
+        dataType: "text",
+        data: { function : 'ultima_orden'},
+        success: function(data){
+          $('input[id=lorden]').val(data) ;
+        }
+    });
+  });
+
   // Complementos del AutoComplete
   $(".form-group").on('focusout', '#n_oficial', function(event){
     var idemp_ = $(this).val() ;
@@ -127,6 +139,7 @@ $( function() {
         "<th scope=\"col\">Nº Julio</th>"+
         "<th scope=\"col\">Numero</th>"+
         "<th scope=\"col\">Bobina</th>"+
+        "<th scope=\"col\">Roturas</th>"+
       "</tr>"+
     "</thead> "+
     "<tbody>");
@@ -142,18 +155,18 @@ $( function() {
           "<td>"+
             "<input type=\"number\" name=\"detalle["+i+"][bobina]\" class=\"form-control\" value=\""+bobinas+"\" "+ (i === julios_r ?  "": "readonly") +" required/>"+
           "</td>"+
+          "<td>"+
+            "<input type=\"text\" name=\"detalle["+i+"][rotura]\" class=\"form-control\" value=\"0\" required/>"+
+          "</td>"+
         "</tr>");
     }
 
     $("#tablaurdido").append("</tbody>") ;
-
     var n_titulo = isNaN(parseInt($("#titulo").val())) ? 0 : parseInt($("#titulo").val());
-
     // Si alguno de los valores es igual a 0 no entra
     if(julios !== 0 && bobinas !== 0 && numeros !== 0 && n_titulo !== 0){
       var peso_total = (julios * bobinas * numeros * 10 * .59 / n_titulo / 1000);
       $("#ktotales").val(peso_total);
-
       $('#guardaurdido').prop('disabled', false);
     }else {
       $('#guardaurdido').prop('disabled', true);
@@ -171,7 +184,6 @@ $( function() {
     var numero = isNaN(parseInt($("#numeros").val())) ? 0 : parseInt($("#numeros").val());
     var bobina = isNaN(parseInt($("#bobinas").val())) ? 0 : parseInt($("#bobinas").val());
     var julio = isNaN( parseFloat( $("#julios").val() ) ) ? 0 : parseFloat($("#julios").val());
-
     mostrar_lista(julio, numero, bobina);
   });
 
@@ -193,6 +205,87 @@ $( function() {
           }
       });
       return false;
+  });
+
+  $.ajax({
+      url: "modelo/urdido.php",
+      method: "GET",
+      data: { function : 'lista_urdido'},
+      dataType: "json",
+    success: function(data){
+      $("#registros").html('');
+      $("#registros").append("<thead class=\"thead-light\">"+
+        "<tr>"+
+          "<th>Hilo</th>"+
+          "<th></th>"+
+          "<th>Fecha</th>"+
+          "<th>Horas</th>"+
+          "<th>Oficial</th>"+
+          "<th>Julios</th>"+
+          "<th>Numeros</th>"+
+          "<th>Orden</th>"+
+          "<th>Roturas</th>"+
+          "<th>Tela</th>"+
+        "</tr>"+
+      "</thead> <tbody>");
+      // Vemos que la respuesta no este vacía y sea una arreglo
+      if(data != null && $.isArray(data)){
+        var i = 0 ;
+        $.each(data, function(key, value){
+          // Vamos agregando a nuestra tabla las filas necesarias
+          var $fechapre = (value.fecha).split('-');
+          $("#registros").append("<tr>"+
+              "<td>"+value.hilo+"</td>"+
+              "<td>"+$.trim(value.descripcion)+"</td>"+
+              "<td>"+$fechapre[2]+"/"+$fechapre[1]+"/"+$fechapre[0]+"</td>"+
+              "<td>"+value.horas+"</td>"+
+              "<td>"+$.trim(value.oficial)+"</td>"+
+              "<td>"+value.julios+"</td>"+
+              "<td>"+value.numeros + "</td>"+
+              "<td>"+value.orden + "</td>"+
+              "<td>"+value.roturas+ "</td>"+
+              "<td>"+value.tela+ "</td>"+
+            "</tr>");
+            i++;
+        });
+        $("#registros").append("</tbody>") ;
+        //$("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
+      }
+      $('#registros').DataTable({
+          responsive: true,
+          language: {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+                "copy": "Copiar",
+                "colvis": "Visibilidad"
+            }
+          }
+      });
+    },
+    error: function(r) {
+      alert("No se pudo generar la Lista de los Registros");
+    },
   });
 
 });
