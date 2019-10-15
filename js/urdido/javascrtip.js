@@ -81,8 +81,6 @@ $( function() {
         $('input[id=hilo]').val('') ;
         $('input[id=titulo]').val('');
         $('input[id=tela]').prop('readOnly', true);
-        alert('Clave de hilo Incorrecta');
-
         $('#telasdestino').remove();
       }
     });
