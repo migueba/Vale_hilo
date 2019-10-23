@@ -148,10 +148,10 @@ $( function() {
             (i === julios_r ?  ( (i-julios) == 0 ? i : (1-(i-julios)).toFixed(2) ) : i )+
           "</td>"+
           "<td>"+
-            "<input type=\"number\" name=\"detalle["+i+"][numero]\" class=\"form-control\" value=\""+numeros+"\" "+ (i === julios_r ?  "": "readonly") +" required/>"+
+            "<input type=\"number\" name=\"detalle["+i+"][numero]\" class=\"form-control\" value=\""+numeros+"\" "+ (i === julios_r ?  "" : (i === 1 ? "" : "readonly")) +" required/>"+
           "</td>"+
           "<td>"+
-            "<input type=\"number\" name=\"detalle["+i+"][bobina]\" class=\"form-control\" value=\""+bobinas+"\" "+ (i === julios_r ?  "": "readonly") +" required/>"+
+            "<input type=\"number\" name=\"detalle["+i+"][bobina]\" class=\"form-control\" value=\""+bobinas+"\" "+ (i === julios_r ?  "" : (i === 1 ? "" : "readonly")) +" required/>"+
           "</td>"+
           "<td>"+
             "<input type=\"text\" name=\"detalle["+i+"][rotura]\" class=\"form-control\" value=\"0\" required/>"+
@@ -171,7 +171,7 @@ $( function() {
     }
 
     if(numeros !== 0 && julios !== 0){
-      var numertos_t = (numeros*julios);
+      var numertos_t = (numeros*julios) * 10 ;
       $("#ntotales").val(numertos_t);
     }
 
