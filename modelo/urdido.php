@@ -331,7 +331,7 @@
 
     $writer = IOFactory::createWriter($documento, 'Xlsx');
     $writer->save('php://output');
-
+    exit;
   }
 
   if(isset($_GET['function']) && !empty($_GET['function'])){
