@@ -163,7 +163,7 @@
         $sheet->getStyle('D'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
         $sheet->setCellValueByColumnAndRow(4, $i, "=".$row['numeros']." * 10" ) ;
         $sheet->getStyle('E'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
-        $sheet->setCellValueByColumnAndRow(5, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*100)" ) ;
+        $sheet->setCellValueByColumnAndRow(5, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*1000)" ) ;
         $sheet->setCellValueByColumnAndRow(6, $i, $row['roturas'] ) ;
         $date = str_replace('-', '/', $row['fecha'] ) ;
         $newDate = date("d/m/Y", strtotime($date)) ;
@@ -231,7 +231,7 @@
         $documento->getActiveSheet()->getStyle('B'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(2, $i, "=".$row['numeros']." * 10" ) ;
         $documento->getActiveSheet()->getStyle('C'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
-        $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*100)" ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*1000)" ) ;
         $documento->getActiveSheet()->getStyle('E'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(4, $i, $row['roturas'] ) ;
         $documento->getActiveSheet()->getStyle('F'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
@@ -292,7 +292,7 @@
         $documento->getActiveSheet()->getStyle('B'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(2, $i, "=".$row['numeros']." * 10" ) ;
         $documento->getActiveSheet()->getStyle('C'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
-        $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*100)" ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*1000)" ) ;
         $documento->getActiveSheet()->getStyle('E'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(4, $i, $row['roturas'] ) ;
         $documento->getActiveSheet()->getStyle('F'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
@@ -371,7 +371,7 @@
         $documento->getActiveSheet()->setCellValueByColumnAndRow(2, $i, $row['oficial'] ) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=".$row['numeros']." * 10" ) ;
         $documento->getActiveSheet()->getStyle('C'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
-        $documento->getActiveSheet()->setCellValueByColumnAndRow(4, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*100)" ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(4, $i, "=".$row['julios']." * ".$row['bobinas']." * ".$row['numeros']." * 10 * .59 / (".$row['titulo']."*1000)" ) ;
         $documento->getActiveSheet()->getStyle('D'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(5, $i, $row['horas'] ) ;
         $documento->getActiveSheet()->setCellValueByColumnAndRow(6, $i, $row['roturas'] ) ;
@@ -452,6 +452,71 @@
 
       $resultado2->close();
     }
+
+
+
+
+
+    /////////////// PRODUCCION ///////////////
+    $consulta = "SELECT SUM(B.julios) as julios, B.numeros as numeros, A.orden,
+    A.fecha, SUM(B.roturas) as roturas, B.bobinas as bobinas, C.h_practico as titulo, C.generico,
+    A.tela, concat(trim(D.nombre),\" \",trim(D.apaterno),\" \",trim(D.amaterno)) as oficial, C.hilo
+    FROM urdido_engomado.urdido A
+    LEFT JOIN urdido_engomado.urdido_detalle B ON A.idurdido = B.id_urdido
+    INNER JOIN urdido_engomado.articulo C ON A.hilo = C.hilo
+    LEFT JOIN urdido_engomado.usuarios D ON A.urdido_usuario = D.idusuario
+    WHERE A.fecha >= \"".$newDate1."\" AND A.fecha <= \"" .$newDate2. "\"
+    GROUP BY A.orden,B.numeros
+    ORDER BY A.orden,B.numeros ASC" ;
+    $documento->createSheet() ;
+    $documento->setActiveSheetIndex(4) ;
+    $documento->getActiveSheet()->setTitle('PRODUCCION')
+              ->setCellValueByColumnAndRow(1, 2, "TITULO")
+              ->setCellValueByColumnAndRow(2, 2, "TELA")
+              ->setCellValueByColumnAndRow(3, 2, "METROS")
+              ->setCellValueByColumnAndRow(4, 2, "NUMEROS")
+              ->setCellValueByColumnAndRow(5, 2, "JULIOS")
+              ->setCellValueByColumnAndRow(6, 2, "BOBINAS")
+              ->setCellValueByColumnAndRow(7, 2, "KILOS")
+              ->setCellValueByColumnAndRow(8, 2, "ORDEN")
+              ->setCellValueByColumnAndRow(9, 2, "CLAVE");
+    $documento->getActiveSheet()->getColumnDimension('A')->setWidth(13) ;
+    $documento->getActiveSheet()->getColumnDimension('B')->setWidth(13) ;
+    $documento->getActiveSheet()->getColumnDimension('C')->setWidth(13) ;
+    $documento->getActiveSheet()->getColumnDimension('D')->setWidth(13) ;
+    $documento->getActiveSheet()->getColumnDimension('E')->setWidth(13) ;
+
+    $documento->getActiveSheet()->getStyle('A2:I2')->getFont()->setBold(true) ;
+    $documento->getActiveSheet()->getStyle('A2:I2')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE) ;
+    $documento->getActiveSheet()->getStyle('A2:I2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK) ;
+
+    if ($resultado = $mysqli->query($consulta)) {
+      $i = 3 ;
+      while( $row = $resultado->fetch_assoc() ){
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(1, $i, $row['titulo'] ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(2, $i, $row['tela'] ) ;
+        $documento->getActiveSheet()->getStyle('C'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=(D".$i."*E".$i.")*10" ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(4, $i, $row['numeros'] ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(5, $i, $row['julios'] ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(6, $i, $row['bobinas'] ) ;
+        $documento->getActiveSheet()->getStyle('G'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(7, $i, "=(E".$i."*F".$i."*D".$i."*10*0.59)/(A".$i."*1000)" ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(8, $i, $row['orden'] ) ;
+        $documento->getActiveSheet()->setCellValueByColumnAndRow(9, $i, $row['hilo'] ) ;
+        $i++;
+      }
+      $documento->getActiveSheet()->getStyle($i)->getFont()->setBold(true) ;
+      $documento->getActiveSheet()->setCellValueByColumnAndRow(1, $i, "TOTAL: " ) ;
+      $documento->getActiveSheet()->getStyle('C'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
+      $documento->getActiveSheet()->setCellValueByColumnAndRow(3, $i, "=SUBTOTAL(9,C3:C".($i-1).")" ) ;
+      $documento->getActiveSheet()->getStyle('G'.$i )->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1) ;
+      $documento->getActiveSheet()->setCellValueByColumnAndRow(7, $i, "=SUBTOTAL(9,G3:G".($i-1).")" ) ;
+
+      $resultado->close();
+    }
+
+
 
 
     $mysqli->close();
