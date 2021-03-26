@@ -261,7 +261,6 @@ $( function() {
             "<option disabled selected value></option>"+
             "<option value=\"2\">Urdido</option>"+
             "<option value=\"3\">Tejido</option>"+
-            "<option value=\"5\">Maquila</option>"+
             "<option value=\"7\">Torzal</option>"+
           "</select>"+
         "</div>"+
@@ -543,7 +542,7 @@ $( function() {
 
           },
           error: function(r){
-            alert("El error ya se esta corrigiendo "+typeof r);
+            alert("Existe un Error, Favor de comunicarlo al departamento de sistemas. "+typeof r);
           }
       });
       return false;

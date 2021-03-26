@@ -1,0 +1,108 @@
+<?php
+  include("modelo/bd.php") ;
+
+  $consulta = "SELECT A.idurdido, A.urdido_usuario AS id_usuario, A.hilo, D.descripcion, A.tela, A.orden, A.fecha,
+	B.numeros, B.bobinas, B.julios, B.roturas, CONCAT(trim(C.nombre), \" \", trim(C.apaterno), \" \", trim(C.amaterno) ) AS supe,
+	B.idurdido_detalle AS id_deta  
+FROM urdido A
+	INNER JOIN urdido_detalle B ON A.idurdido = B.id_urdido 	
+	INNER JOIN usuarios C ON A.urdido_usuario = C.idusuario 
+	INNER JOIN articulo D ON A.hilo = D.hilo 
+WHERE A.estatus <> 0 AND B.estatus <> 0 AND A.idurdido = " .$_GET['id_urdido'] ;
+
+if ($resultado = $mysqli->query($consulta)) {
+	$urdidodata = array(); $i=0;
+    while($row = mysqli_fetch_array($resultado)){
+      $urdidodata[$i] = $row;
+      $i++;
+    }
+}else{
+   $mysqli->close();
+}
+
+?>
+
+ <html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Muestra la informacion de un registro de urdido">
+    <meta name="author" content="Julio Cesar Barradas">
+
+    <title>Registro urdido N°<?php echo $_GET['id_urdido']; ?></title>
+
+    <STYLE type="text/css">
+   		td input {min-width: 10px;max-width: 100%; width: 100%;}
+ 	</STYLE>
+
+  </head>
+
+  <body>
+    <div class="container" style="margin-top: 20px; border-style: dashed; border-color: black; ">
+   		<form method="POST" id="formulario" autocomplete="off" action="#">
+			<div class="row">
+		        <div class="col-md-4" >
+		        	<img style="height: 100px; width: 220px; display: block;"  src="images/FABRICA MARÍA SIN FONDO_negro_corta.png" />
+		        </div>
+		        <div class="col-md-8" >
+		        	<h3 class="mt-4 text-center">Registro urdido N° <?php echo $_GET['id_urdido']; ?></h3>
+		    	</div>
+		     </div>
+
+	      	<div class="row">
+	        	<div class="col-md-4" >
+	          		<p>Fecha: <strong><?php echo date("d/m/Y",strtotime($urdidodata[0]['fecha'])); ?></strong></p>
+	          		<p>Total de Julios: <strong><?php echo number_format($i,2); ?></strong></p>
+	          		<p>N° Orden: <strong><?php echo $urdidodata[0]['orden']; ?></strong></p>
+	        	</div>
+	        	<div class="col-md-8" >
+		          <p>Supervisor: <strong><?php echo $urdidodata[0]['supe']; ?></strong></p>
+		          <p>Hilo: <strong><?php echo $urdidodata[0]['descripcion']; ?></strong></p>
+		          <p>Tela: <strong><?php echo $urdidodata[0]['tela']; ?></strong></p>
+	        	</div>
+	      	</div>
+
+
+	      	<div class="row" style="margin-top: 20px;">
+	        	<div class="col-md-12" >
+	          		<table id="urdido_informacion" class="table">
+			            <thead class=\"thead-light\">
+			              <tr>
+			              	<th scope=\"col\">N° Julio</th>
+			                <th scope=\"col\">Numeros</th>
+			                <th scope=\"col\">Bobinas</th>
+			                <th scope=\"col\">Roturas</th>
+			                <th scope=\"col\"></th>
+			              </tr>
+			            </thead>
+			            <tbody>
+			            <?php
+			            	for($i=0; $i < count($urdidodata); $i++){
+			                	echo "<tr>";
+				                	echo "<td>" .($i+1). "</td>";
+				                  	echo "<td> <input type=\"number\" name=\"detalle[".$i."][numeros]\" value = \"".$urdidodata[$i]['numeros']."\"/> </td>";
+				                  	echo "<td> <input type=\"number\" name=\"detalle[".$i."][bobinas]\" value = \"".$urdidodata[$i]['bobinas']."\"/></td>";
+				                  	echo "<td> <input type=\"number\" name=\"detalle[".$i."][roturas]\" value = \"".$urdidodata[$i]['roturas']."\"/></td>";
+				                  	echo "<td> <input type=\"hidden\" name=\"detalle[".$i."][id_deta]\" value = \"".$urdidodata[$i]['id_deta']."\"/></td>";
+			                  	echo "</tr>";
+			                }
+			            ?>
+	            		</tbody>
+	          		</table>
+	        	</div>
+	      	</div>
+
+		  <div class="btn-group d-flex justify-content-center" style="margin-bottom: 20px;">
+		  	<button type="submit" id="modiurdido" class="btn btn-primary" >Modificar</button>
+		  </div>
+
+	  	</form>
+    </div>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/sticky-footer.css">
+
+    <script language="JavaScript" type="text/javascript" src="vendor/jquery/jquery.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/bootstrap.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/urdido/js_inf_urdido.js"></script>
+  </body>
+</html>

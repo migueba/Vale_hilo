@@ -1,5 +1,11 @@
 $( function() {
 
+  // MOSTRAR VENTANA PARA MODIFICAR //
+    $("#registros").on('click', '.clickmodificar', function(data) {
+    var id_urdido = $(this).attr('id-urdido') ;
+    window.open( "inf_urdido.html?id_urdido="+id_urdido, "Urdido", "width=850,height=500, top=85,left=100");
+  });
+
   // PARA BUSCAR LA ULTIMA ORDEN REGISTRADA
   $(".form-group").on('focus', '#orden', function(event){
     $.ajax({
@@ -23,6 +29,23 @@ $( function() {
           $('input[id=oficial]').val(data.nombre) ;
         }
     });
+  });
+
+  $("#registros").on('click', '.clickcancel', function(data) {
+    var id_urd = $(this).attr('id-urdido') ;
+    var r = confirm("Esta seguro de eliminar el Vale Nº "+id_urd);
+    if (r == true) {
+      $.ajax({
+          url: "modelo/urdido.php",
+          method: "GET",
+          data: { function : 'cancelar_urdido', id_urdido: id_urd},
+          dataType: "text",
+        success: function(data){
+          alert(data);
+          location.reload();
+        },
+      });
+    }
   });
 
   // AutoComplete en la lista de Usuarios
@@ -221,9 +244,12 @@ $( function() {
           "<th>Oficial</th>"+
           "<th>Julios</th>"+
           "<th>Numeros</th>"+
+          "<th>Bobinas</th>"+
           "<th>Orden</th>"+
           "<th>Roturas</th>"+
           "<th>Tela</th>"+
+          "<th></th>"+
+          "<th></th>"+
         "</tr>"+
       "</thead> <tbody>");
       // Vemos que la respuesta no este vacía y sea una arreglo
@@ -240,16 +266,20 @@ $( function() {
               "<td>"+$.trim(value.oficial)+"</td>"+
               "<td>"+value.julios+"</td>"+
               "<td>"+value.numeros + "</td>"+
+               "<td>"+value.bobinas + "</td>"+
               "<td>"+value.orden + "</td>"+
               "<td>"+value.roturas+ "</td>"+
               "<td>"+value.tela+ "</td>"+
+              "<td><img id-urdido=\""+value.idurdido+"\" class=\"clickmodificar\" src=\"images/escritura.png\" /></td>"+
+              "<td><img id-urdido=\""+value.idurdido+"\" class=\"clickcancel\" src=\"images/cancelar.png\"/></td>"+
             "</tr>");
             i++;
         });
         $("#registros").append("</tbody>") ;
         //$("#contenido_tabla").css({"max-height":"350px", "overflow-y":"scroll"});
       }
-      $('#registros').DataTable({
+      var table = $('#registros').DataTable({
+          "order": [[ 7, 'desc' ]],
           responsive: true,
           language: {
             "sProcessing":     "Procesando...",

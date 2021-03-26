@@ -109,6 +109,8 @@ $( function() {
     }
   });
 
+
+  //// Esta es para imprimir un vale ( No sirve aun)
   var form = $("#ver_vales");
   form.submit(function(){
       event.preventDefault();

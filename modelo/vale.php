@@ -167,10 +167,6 @@ function reporte_vale_detallado() {
     }
 }
 
-function reporte_vale_general() {
-    include("bd.php") ;
-
-}
 
 ////////////// Para validar la informacion de el Vale y asi poder guardarlo //////////////
 function validar_vale() {
